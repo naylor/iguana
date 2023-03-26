@@ -1,0 +1,18 @@
+#!/bin/bash
+
+NAME=iguana-hpc-usp
+BIN=/usr/local/bin
+
+while true
+do
+  if pgrep -x "$NAME" > /dev/null
+  then
+      echo "Running"
+  else
+      echo "Stopped"
+      $BIN/$NAME > /var/log/iguana-hpc-monitor.log
+  fi
+ sleep 1
+done
+
+exit 0

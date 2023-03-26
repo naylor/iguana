@@ -1,0 +1,94 @@
+<div class="card m-3">
+    <h6 class="card-header">
+        <span>Monitoring</span>
+        <br/>
+        <span class="help">In this section, the system shows users online and their running tasks.</span>
+    </h6>
+    <div class="col-md-12 user-container">
+
+        <div class="form-group" style="margin-top: 15px;">
+
+            <div class="form-row" *ngIf="hostInfo.OpMode!=='NODE'">
+
+                <div class="col-md-6 user-container">
+                    <div class="card m-12">
+                        <div class="card-header">
+                            Users online
+                            <mat-divider></mat-divider>
+
+                            <mat-list>
+                                <mat-list-item *ngFor="let h of hosts">
+                                    <mat-icon mat-list-icon>account_circle</mat-icon>
+                                    <div mat-line [className]="h.Owner===hostInfo['Owner'] ? 'master':''">{{h.Owner}}
+                                    </div>
+                                    <div mat-line> Last Activity: {{h.LastActivity | slice:0:16}}</div>
+                                </mat-list-item>
+                            </mat-list>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 user-container">
+                    <div class="card m-12">
+                        <div class="card-header">
+                            Tasks
+                            <mat-divider></mat-divider>
+
+                            <mat-table [dataSource]="dataSource" class="table table-striped" matSort>
+
+                                <!-- User Column -->
+                                <ng-container matColumnDef="User">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> User</mat-header-cell>
+                                    <mat-cell *matCellDef="let row"> {{row.User}}</mat-cell>
+                                </ng-container>
+
+                                <!-- Position Column -->
+                                <ng-container matColumnDef="Position">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Position</mat-header-cell>
+                                    <mat-cell *matCellDef="let row"> {{row.Position}}</mat-cell>
+                                </ng-container>
+
+                                <!-- Queue Column -->
+                                <ng-container matColumnDef="Queue">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Queue</mat-header-cell>
+                                    <mat-cell *matCellDef="let row"> {{row.Concurrency}}</mat-cell>
+                                </ng-container>
+
+                                <!-- Command Column -->
+                                <ng-container matColumnDef="Command">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Command</mat-header-cell>
+                                    <mat-cell *matCellDef="let row"> {{row.Sequence}}</mat-cell>
+                                </ng-container>
+
+                                <!-- Time Column -->
+                                <ng-container matColumnDef="Time">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header> Time</mat-header-cell>
+                                    <mat-cell *matCellDef="let row"> {{row.Count}}</mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns;">
+                                </mat-row>
+                            </mat-table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-row" *ngIf="hostInfo.OpMode==='NODE'">
+
+                    <div class="col-md-6 user-container">
+                        <div class="card m-12">
+                            <div class="card-header text-center">
+                                Monitoring does not work in node mode, only local and cluster modes.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

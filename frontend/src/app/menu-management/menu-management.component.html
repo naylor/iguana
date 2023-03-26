@@ -1,0 +1,42 @@
+<div class="divTable">
+    <div class="divTableBody">
+        <div class="divTableRow" *ngIf="userSession.Module==='Admin'">
+            <div class="divTableCell"><mat-icon>class</mat-icon></div>
+            <div class="divTableCell"><a href="#" (click)="setRoute('view-classroom-manager'); false;" style="margin-left: 20px;">Classrooms</a></div>
+        </div>
+
+        <div class="divTableRow" *ngIf="userSession.Module==='Admin'">
+            <div class="divTableCell"><mat-icon>computer</mat-icon></div>
+            <div class="divTableCell"><a href="#" (click)="setRoute('cluster-available'); false;" style="margin-left: 20px;">Cluster on Network</a></div>
+        </div>
+
+        <div class="divTableRow" *ngIf="userSession.Module==='Admin'">
+            <div class="divTableCell"><mat-icon>developer_board</mat-icon></div>
+            <div class="divTableCell"><a href="#"
+                                         (click)="setRoute('current-nodes'); false;" style="margin-left: 20px;">Nodes</a></div>
+        </div>
+
+        <div class="divTableRow">
+            <div class="divTableCell"><mat-icon>filter</mat-icon></div>
+            <div class="divTableCell"><a href="#" (click)="setRoute('monitoring'); false;" style="margin-left: 20px;">Monitoring</a></div>
+        </div>
+
+        <div class="divTableRow" *ngIf="userSession.Module==='Admin'">
+            <div class="divTableCell"><mat-icon>settings</mat-icon></div>
+            <div class="divTableCell"><a href="#"
+                                         (click)="setRoute('settings'); false;" style="margin-left: 20px;">Settings</a>
+            </div>
+        </div>
+
+        <div class="divTableRow" *ngIf="userSession.Module==='Admin'">
+            <div class="divTableCell"><mat-icon>person</mat-icon></div>
+            <div class="divTableCell"><a href="#" (click)="setRoute('view-user'); false;" style="margin-left: 20px;">System Users</a></div>
+        </div>
+
+        <div class="divTableRow" *ngIf="userSession.Module==='Admin'">
+            <div class="divTableCell"><mat-icon>power_settings_new</mat-icon></div>
+            <div class="divTableCell"><a href="#" (click)="reboot(); false;" style="margin-left: 20px;">Reboot</a></div>
+        </div>
+
+    </div>
+</div>

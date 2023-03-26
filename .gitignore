@@ -1,0 +1,13 @@
+# dependencies
+node_modules/
+
+# IDEs and editors
+.idea/
+
+#GO PKG
+pkg/
+backend/src
+src/github.com
+src/golang.org
+src/gopkg.in
+

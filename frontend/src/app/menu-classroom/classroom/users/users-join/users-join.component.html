@@ -1,0 +1,54 @@
+<div class="card m-3">
+  <h6 class="card-header">
+    <div style="float: left">
+      <span>Classroom Members</span>
+    </div>
+    <div style="float: right">
+      <button class="btn-sm btn-success" (click)="setRoute('view-user-classroom')" style="margin-left: 20px;">Users</button>
+    </div>
+  </h6>
+
+  <div class="col-md-6 group-container">
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <div class="hidden">
+        <input type="text" formControlName="Name" placeholder="Name" name="Name" class="form-control" id="Name" readonly>
+      </div>
+
+      <mat-chip-list #chipList aria-label="Member selection">
+
+        <div class="form-group">
+
+          <mat-chip
+                  *ngFor="let member of members"
+                  [selectable]="selectable">
+            {{member.Name}}
+          </mat-chip>
+        </div>
+        <div class="form-group">
+
+          <input
+                  placeholder="New member..."
+                  #memberInput
+                  [formControl]="memberCtrl"
+                  [matAutocomplete]="auto"
+                  [matChipInputFor]="chipList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                  [matChipInputAddOnBlur]="addOnBlur"
+                  (matChipInputTokenEnd)="add(memberInput)">
+        </div>
+      </mat-chip-list>
+      <div class="form-group">
+
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+          <mat-option *ngFor="let member of filteredMembers | async" [value]="member">
+            {{member.Name}}
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+
+      <div class="form-group">
+        <button class="btn-sm btn-success">Update</button>
+      </div>
+    </form>
+  </div>
+</div>

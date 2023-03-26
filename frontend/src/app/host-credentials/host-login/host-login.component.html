@@ -1,0 +1,43 @@
+<div class="loginMain card m-3 tags">
+
+  <div class="login card m-3 tags">
+    <h6 class="card-header">
+      <div class="host">
+        <div class="name">Host Credentials</div>
+      </div>
+    </h6>
+    <div class="card-body">
+      <form *ngIf="!userSession.Owner" [formGroup]="registerForm" (ngSubmit)="onSubmit()"
+            class="d-flex justify-content-center">
+        <div class="form-row">
+          <div class="form-group col">
+            <input type="text" formControlName="owner"
+                   class="form-control" placeholder="Email"
+                   [ngClass]="{ 'is-invalid': submitted && f.owner.errors }" />
+            <input type="password" formControlName="password"
+                   class="form-control" placeholder="Password"
+                   [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+            <span class="session"><a href="#" (click)="recoverPassword(); false;">Recover Password</a></span>
+            <div *ngIf="submitted && f.owner.errors" class="invalid-feedback">
+              <div *ngIf="f.owner.errors.required">Field is required</div>
+              <div *ngIf="f.owner.errors.minlength">Email Or Password must be at least 4 characters</div>
+              <div *ngIf="f.owner.errors.generic">{{f.owner.errors.generic}}</div>
+            </div>
+          </div>
+          <div class="buttons text-center flex-column">
+            <div class="text-center">
+              <button class="btn btn-primary mr-1">OK</button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="response text-center" *ngIf="response.Name">
+        <div *ngIf="response.Name==='info'" class="{{response.Name}}">{{response.Status}}
+          <app-mat-progress-bar></app-mat-progress-bar>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

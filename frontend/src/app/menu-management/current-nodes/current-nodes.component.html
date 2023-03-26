@@ -1,0 +1,89 @@
+<div class="card m-3">
+    <h6 class="card-header">
+        <span>Current Virtual Nodes in the Cluster</span>
+        <br/>
+        <span class="help">Here the hosts and their respective nodes are listed.
+          You can add or remove nodes in the host/cluster.</span>
+    </h6>
+    <div class="col-md-12 user-container">
+
+        <div class="form-group" style="margin-top: 15px;">
+
+            <div class="form-row">
+
+                <div class="col-md-6 user-container">
+                    <div class="card m-12">
+                        <div class="card-header nodesSelection">
+                            Increase or decrease the virtual nodes number
+                            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="justify-content-center">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <input type="number" formControlName="srvNumber"
+                                               onkeydown="return false"
+                                               onclick="return false"
+                                               class="form-control"
+                                               [ngClass]="{ 'is-invalid': submitted && f.srvNumber.errors }"
+                                        />
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <button class="btn btn-primary mr-1"
+                                                [disabled]="!f.srvNumber.errors && response.Name==='info'">OK
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div *ngIf="submitted && f.srvNumber.errors" class="invalid-feedback">
+                                        <div *ngIf="f.srvNumber.errors.required">Number of nodes is required</div>
+                                        <div *ngIf="f.srvNumber.errors.min">Nodes must be at least 0 number or more
+                                        </div>
+                                        <div *ngIf="f.srvNumber.errors.generic">{{f.srvNumber.errors.generic}}</div>
+                                    </div>
+                                    <div *ngIf="response.Name" class="{{response.Name}} response">
+                                        {{response.Status}}
+                                        <app-mat-progress-bar *ngIf="response.Name==='info'"></app-mat-progress-bar>
+                                    </div>
+                                </div>
+
+                                <span class="description">
+                                    Current node mode: {{hostInfo.Cluster.NodeMode}}
+                                    <hr />
+                                SINGLE: creates a node for each vCPU present on the host, simulating a cluster.
+                                <br />MULTI.: allocates all vCPUs to Master virtual node.
+                                <br />SHARED: makes all vCPUs available to nodes, regardless of quantity.
+                                    <hr />
+                                    Go to <a href="#" (click)="setRoute('settings'); false;">Settings</a> to change node mode.
+                            </span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 user-container">
+                    <div class="card m-12">
+                        <mat-list>
+                            <mat-list-item *ngFor="let n of nodes">
+                                <mat-icon mat-list-icon>computer</mat-icon>
+                                <div mat-line><b>Host: {{n.Hostname}}</b>
+                                    <i class="nodes">(Mem: {{n.Memory}}MB | vCPU: {{n.NumberOfCPUs}})</i>
+                                </div>
+                                <mat-list class="listNodes">
+                                    <div *ngFor="let c of n.Container">
+                                        <mat-list-item mat-line class="nodes">---</mat-list-item>
+                                        <mat-list-item mat-line class="nodes"><b>{{c.Name==='master'? 'Physical
+                                            Node':'Virtual Node'}}: {{c.Name}}</b></mat-list-item>
+                                        <mat-list-item mat-line class="nodes">vCPU: {{hostInfo.Cluster.NodeMode==='SHARED'?
+                                            'shared':hostInfo.Cluster.NodeMode==='MULTI'?'all':'1'}} (<span [className]="c.State==='running' ? 'ok':'error'">{{c.State}}</span>)
+                                        </mat-list-item>
+                                    </div>
+                                </mat-list>
+                                <mat-divider></mat-divider>
+                            </mat-list-item>
+                        </mat-list>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+<div class="card m-3">
+    <h6 class="card-header">
+        <span>Cluster on Network</span>
+        <br/>
+        <span class="help">In this section, the nodes detected on the local computer network are displayed.
+          If this host is a node, you can connect to a host configured as a master on the network.</span>
+    </h6>
+    <div class="col-md-12 user-container">
+
+        <div class="form-group" style="margin-top: 15px;">
+
+            <div class="form-row">
+
+                <div class="col-md-6 user-container">
+                    <div class="card m-12">
+                        <div class="card-header" style="min-height: 141px;">
+                            <app-mat-progress-bar *ngIf="!hostInfo.OpMode"></app-mat-progress-bar>
+
+                            <div *ngIf="responseCo.Name" class="{{responseCo.Name}} response text-center">
+                                {{responseCo.Status}}
+                                <app-mat-progress-bar *ngIf="responseCo.Name==='info'"></app-mat-progress-bar>
+                            </div>
+                            <table class="table table-striped">
+                                <tr *ngFor="let c of clusters">
+                                    <td>
+                                        <ul>
+                                            <li [className]="c.Name==='master' ? 'master':''">
+                                                {{c.Name}} - {{c.MasterIP}}
+                                                <p>
+                                                    <span class="connected">Last Check: {{c.LastActivity | slice:0:16}}</span>
+                                                    <span *ngIf="hostInfo.Cluster.Id===c.Id" class="connected"> | (connected)</span>
+                                                    <img *ngIf="c.Password" class="key" src="../../assets/key.png"/>
+
+                                                    <a *ngIf="hostInfo.Cluster.Id!==c.Id && hostInfo['IsMaster']"
+                                                       href="#" (click)="connectToCluster(c);false;" class="connected">-
+                                                        Connect Now</a>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div *ngIf="!(clusters)?.length"><span
+                                    class="connected">*No master detected on the network</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 user-container">
+                    <div class="card m-12">
+                        <div class="card-header text-center">
+                            Change the host's operating mode:
+
+                            <div class="card-body op-mode">
+                                <mat-button-toggle-group #group="matButtonToggleGroup" [value]="hostInfo.OpMode"
+                                                         (click)="setOpMode(group.value)">
+                                    <mat-button-toggle value="MASTER">
+                                        MASTER
+                                    </mat-button-toggle>
+                                    <mat-button-toggle value="NODE">NODE
+                                    </mat-button-toggle>
+                                    <mat-button-toggle value="LOCAL">LOCAL
+                                    </mat-button-toggle>
+                                </mat-button-toggle-group>
+                            </div>
+
+                            <div class="response text-center" *ngIf="responseOp.Name">
+                                <div *ngIf="responseOp.Name==='ok' || responseOp.Name==='info'" class="{{responseOp.Name}}">
+                                    {{responseOp.Status}}
+                                    <app-mat-progress-bar></app-mat-progress-bar>
+                                </div>
+                                <div *ngIf="responseOp.Name==='error'" class="{{responseOp.Name}}">{{responseOp.Status}}</div>
+                            </div>
+
+                            <span class="description">
+                                Go to <a href="#" (click)="setRoute('settings'); false;">Settings</a> to change operating mode permanently.
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,134 @@
+<div class="card m-3">
+  <h6 class="card-header">
+    <div style="float: left">
+      <span>{{fe.Id.value ? "Edit":"Add"}} Exercise</span>
+    </div>
+    <div style="float: right">
+      <button class="btn-sm btn-success" (click)="setRoute('view-exercise')" style="margin-left: 20px;">Exercises</button>
+    </div>
+  </h6>
+  <br />
+  <div class="col-md-12 group-container">
+    <div *ngIf="!fe.Id.value">
+      <span class="alert-info">Fill in the contents and parameters first, then click the Insert button to enable Groups, Files, and Code.</span>
+      <br />
+      <br />
+    </div>
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+
+      <ul ngbNav #nav="ngbNav" class="nav-tabs" [destroyOnHide]="false">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>Content</a>
+          <ng-template ngbNavContent>
+
+            <div class="form-group">
+              <label for="Title">Title:</label>
+              <input class="text" type="text" formControlName="Title" name="Title" id="Title">
+            </div>
+
+            <div class="form-group">
+              <label for="Content">Content:</label>
+              <ckeditor [editor]="Editor" [config]="config" formControlName="Content"></ckeditor>
+            </div>
+
+          </ng-template>
+        </li>
+
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>Parameters</a>
+          <ng-template ngbNavContent>
+
+            <div class="form-group">
+              <label for="Date">Expiration Date: </label>
+
+              <div class="form-group">
+                <div class="input-group">
+                  <input class="date" placeholder="yyyy-mm-dd"
+                         name="dp" formControlName="Date" ngbDatepicker #d="ngbDatepicker">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
+                      <img class="icon" src="../../assets/calendar.png" />
+                    </button>
+                  </div>
+                </div>
+                <ngb-timepicker formControlName="Time"></ngb-timepicker>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="MaxSubmissions">Maximum Number of Submissions:</label>
+              <input class="number" type="number" min="0" max="1000" formControlName="MaxSubmissions"
+                     name="MaxSubmissions" id="MaxSubmissions">
+            </div>
+
+            <div class="form-group">
+              <label for="MaxTimeout">Maximum Timeout (seconds):</label>
+              <input class="number" type="number" min="0" max="1000" formControlName="MaxTimeout"
+                     name="MaxTimeout" id="MaxTimeout">
+            </div>
+
+            <div class="form-group">
+              <label for="MaxFileSize">Maximum file size that the student can use with input (bytes). <br />Leave zero to disable:</label>
+              <input class="number" type="number" formControlName="MaxFileSize"
+                     name="MaxFileSize" id="MaxFileSize"
+                     (click)="getInputMaxFileSize($event)"
+                     (keyup)="getInputMaxFileSize($event)">{{maxFileSize}}
+            </div>
+
+          </ng-template>
+        </li>
+
+        <li [ngbNavItem]="4" [disabled]="!exerciseId">
+          <a ngbNavLink>Groups</a>
+          <ng-template ngbNavContent>
+
+            <exercises-app-groups [exerciseId]="exerciseId"
+                          *ngIf="exerciseId"></exercises-app-groups>
+
+          </ng-template>
+        </li>
+
+        <li [ngbNavItem]="5" [disabled]="!exerciseId">
+          <a ngbNavLink>Files</a>
+          <ng-template ngbNavContent>
+            <exercises-app-files [exerciseId]="exerciseId"
+                                 *ngIf="exerciseId"></exercises-app-files>
+          </ng-template>
+        </li>
+
+        <li [ngbNavItem]="6" [disabled]="!fe.Id.value">
+          <a ngbNavLink (click)="updateCodeTab()">Code</a>
+          <ng-template ngbNavContent>
+            <div class="form-group code">
+              <app-code></app-code>
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+      <div class="form-group">
+        <button class="btn-sm btn-success">{{exerciseId? "Update":"Insert"}}</button>
+      </div>
+      <div *ngIf="submitted && fe.Title.errors" class="error response">
+        <div *ngIf="fe.Title.errors.required">Title is required</div>
+        <div *ngIf="fe.Name.errors.minlength">Title field must have a minimum of 5 characters</div>
+        <div *ngIf="fe.Title.errors.maxlength">Title must be up to 100 characters long</div>
+      </div>
+      <div *ngIf="submitted && fe.Date.errors" class="error response">
+        <div *ngIf="fe.Date.errors.required">Date is required</div>
+      </div>
+      <div *ngIf="submitted && fe.Time.errors" class="error response">
+        <div *ngIf="fe.Time.errors.required">Time is required</div>
+      </div>
+      <div *ngIf="submitted && fe.MaxTimeout.errors" class="error response">
+        <div *ngIf="fe.MaxTimeout.errors.required">MaxTimeout is required</div>
+      </div>
+      <div *ngIf="submitted && fe.MaxSubmissions.errors" class="error response">
+        <div *ngIf="fe.MaxSubmissions.errors.required">MaxSubmissions is required</div>
+      </div>
+    </form>
+
+  </div>
+</div>
+

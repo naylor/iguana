@@ -1,0 +1,27 @@
+.tags {
+  min-height: 150px;
+  min-width: 20vw;
+  max-width: calc(100vw - 35px);
+}
+
+.text-link {
+  font-size: 14px;
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+}
+
+.main {
+  float: left;
+}
+
+.mainSide {
+  float: left;
+  margin-left: 10px;
+}
+
+::ng-deep .btn-group-sm>.btn, .btn-sm {
+  padding: 0rem 0rem !important;
+}

@@ -1,0 +1,17 @@
+
+<ng-template #popContent>
+  <span>Your Hostname: {{hostInfo.Hostname}}</span>
+  <br /><span>Operation Mode: <b>{{hostInfo.OpMode}}</b></span>
+  <br /><span>Queuing System: <b>{{hostInfo.Queue}}</b> (Max. Concurrency: <b>{{hostInfo.MaxConcurrency}}</b>)</span>
+  <br /><span class="{{hostConnection.Name}}">
+            Connection Status: <b>{{hostConnection.Status}}</b></span>
+  <br />
+  <div *ngIf="hostConnection['Name']==='info'" class="response">
+    <app-mat-progress-bar></app-mat-progress-bar>
+  </div>
+</ng-template>
+
+<img class="icon" container="body" src="{{hostConnection['Name']==='ok'? '../../assets/serverOn.png':'../../assets/serverOff.png'}}"
+       [ngbPopover]="popContent"
+       triggers="mouseenter:mouseleave"
+       popoverTitle="About this server" />

@@ -1,0 +1,85 @@
+<div class="card m-3">
+    <h6 class="card-header">
+        <div style="float: left">
+            <span>Classrooms</span>
+        </div>
+        <div style="float: right">
+            <button class="btn-sm btn-primary" style="width:100px" (click)="addClassroom()">Add</button>
+        </div>
+    </h6>
+
+    <div *ngIf="load===0">
+        <app-mat-progress-bar></app-mat-progress-bar>
+    </div>
+
+    <div *ngIf="(classroom?.length <= 0 && load===1)">
+        No records found.
+    </div>
+
+    <div class="filter">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilter($any($event.target).value)" placeholder="Filter: ">
+        </mat-form-field>
+    </div>
+
+    <div class="mat-elevation-z8 ">
+
+        <mat-table [dataSource]="dataSource" matSort>
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="Id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Id}} </mat-cell>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="Name">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Name}} </mat-cell>
+            </ng-container>
+
+            <!-- IdUser Column -->
+            <ng-container matColumnDef="Owner">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Owner </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Owner}} </mat-cell>
+            </ng-container>
+
+            <!-- MaxStudents Column -->
+            <ng-container matColumnDef="MaxStudents">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> MaxStudents </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.MaxStudents}} </mat-cell>
+            </ng-container>
+
+            <!-- Enabled Column -->
+=            <ng-container matColumnDef="Enabled">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Enabled </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Enabled ? 'Yes' : 'No'}} </mat-cell>
+            </ng-container>
+
+            <!-- KeyAccess Column -->
+            <ng-container matColumnDef="KeyAccess">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> KeyAccess </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.KeyAccess}} </mat-cell>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="Action">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+                <mat-cell *matCellDef="let element" class="action-link">
+                    <button mat-icon-button (click)="deleteClassroom(element)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="editClassroom(element)" style="margin-left: 20px;">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;">
+            </mat-row>
+        </mat-table>
+
+        <mat-paginator [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
+    </div>
+</div>

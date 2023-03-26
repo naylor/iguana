@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+    master:
+        build: master/.
+        restart: on-failure
+
+    slave:
+        build: slave/.
+        restart: on-failure

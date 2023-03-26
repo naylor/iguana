@@ -1,0 +1,66 @@
+<form [formGroup]="myGroup">
+    <mat-form-field appearance="fill" *ngIf="(userSession.Id || userSession.Module==='Admin') && classroom?.length > 0">
+        <mat-label>Classroom</mat-label>
+        <mat-select formControlName="classroomControl"
+                    (selectionChange)="onChange()"
+                    [compareWith]="compareObjects"
+                    required [(ngModel)]="classSelected">
+            <mat-option *ngFor="let c of classroom" [value]="c">
+                {{c.Name}}
+            </mat-option>
+        </mat-select>
+        <mat-hint *ngIf="classroom?.length <= 0">No registered classroom.</mat-hint>
+    </mat-form-field>
+</form>
+
+<div class="divTable" [ngClass]="{'emptyClassroom': classroom?.length <= 0, 'hasClassroom': classroom?.length > 0}">
+    <div class="divTableBody">
+        <div class="divTableRow" *ngIf="classSelected.Id">
+
+            <div class="divTableCell">
+                <mat-icon>info</mat-icon>
+            </div>
+            <div class="divTableCell"><a href="#" (click)="onChange(); false;"
+                                         style="margin-left: 20px;">Info</a></div>
+        </div>
+        <div class="divTableRow" *ngIf="classSelected.Id && (userModule==='Assistant'
+                                                        || userModule==='Lecturer'
+                                                        || userSession.Module==='Admin'
+                                                        || classSelected.IdUser==userSession.Id)">
+            <div class="divTableCell">
+                <mat-icon>person</mat-icon>
+            </div>
+            <div class="divTableCell"><a href="#" (click)="setRoute('view-user-classroom'); false;"
+                                         style="margin-left: 20px;">Users</a>
+            </div>
+        </div>
+
+        <div class="divTableRow" *ngIf="classSelected.Id && (userModule==='Assistant'
+                                                        || userModule==='Lecturer'
+                                                        || userSession.Module==='Admin'
+                                                        || classSelected.IdUser==userSession.Id)">
+            <div class="divTableCell">
+                <mat-icon>group</mat-icon>
+            </div>
+            <div class="divTableCell"><a href="#" (click)="setRoute('view-group'); false;"
+                                         style="margin-left: 20px;">Groups</a>
+            </div>
+        </div>
+
+        <div class="divTableRow" *ngIf="classSelected.Id">
+            <div class="divTableCell">
+                <mat-icon>format_list_numbered</mat-icon>
+            </div>
+            <div class="divTableCell"><a href="#" (click)="setRoute('view-exercise'); false;"
+                                         style="margin-left: 20px;">Exercises</a></div>
+        </div>
+
+        <div class="divTableRow" *ngIf="classSelected.Id">
+            <div class="divTableCell">
+                <mat-icon>code</mat-icon>
+            </div>
+            <div class="divTableCell"><a href="#" (click)="setRoute('view-code'); false;"
+                                         style="margin-left: 20px;">Try a Code</a></div>
+        </div>
+    </div>
+</div>

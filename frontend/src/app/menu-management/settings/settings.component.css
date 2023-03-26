@@ -1,0 +1,13 @@
+input, select {
+  max-width: 300px;
+}
+
+.description {
+  font-size: 12px;
+  display: block;
+  white-space: pre-line;
+}
+
+.help {
+  font-size: 12px;
+}

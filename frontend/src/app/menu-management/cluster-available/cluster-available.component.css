@@ -1,0 +1,42 @@
+.user-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.key {
+  width: 20px;
+}
+
+.connected {
+  font-size: 12px;
+  color: blue;
+}
+
+.help {
+  font-size: 12px;
+}
+
+.mat-button-toggle {
+  flex-wrap: wrap !important;
+  overflow-wrap: break-word !important;
+  border-radius: 4px;
+  margin-left: 3px;
+  margin-right:3px;
+  width: 80px;
+  height: 50px;
+  font-size: 14px;
+}
+
+.mat-button-toggle-checked {
+  background-color: #007bff;
+}
+
+.op-mode {
+  text-align: center;
+}
+
+.description {
+  font-size: 12px;
+  display: block;
+  white-space: pre-line;
+}

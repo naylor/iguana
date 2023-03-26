@@ -1,0 +1,12 @@
+[Unit]
+Description=Iguana-hpc-usp
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+ExecStart=/etc/init.d/iguana-hpc-usp start
+ExecStop=/etc/init.d/iguana-hpc-usp stop
+ExecReload=/etc/init.d/iguana-hpc-usp restart
+
+[Install]
+WantedBy=multi-user.target

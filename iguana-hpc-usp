@@ -1,0 +1,70 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          clusterd
+# Required-Start:    $all
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: cluster service
+### END INIT INFO
+
+set -e
+
+. /lib/lsb/init-functions
+
+MONITOR=iguana-hpc-monitor
+NAME=iguana-hpc-usp
+BIN=/usr/local/bin
+DAEMON=$BIN/$MONITOR
+PIDDIR=/run/$MONITOR
+PIDFILE=$PIDDIR/$MONITOR.pid
+EXIT=0
+
+case $1 in
+  start)
+
+    # Exit if required binary is missing.
+    if [ -f "$DAEMON" ]; then
+        log_progress_msg "$DAEMON starting..."
+    else
+        log_failure_msg "FAILED to find $DAEMON"
+        EXIT=3
+    fi
+
+    if [ -d "$PIDDIR" ]; then
+        log_progress_msg "$PIDDIR ok..."
+    else
+        log_progress_msg "Creating $PIDDIR"
+        mkdir "$PIDDIR"
+    fi
+
+    log_daemon_msg "Starting $NAME server" "$NAMEd" || true
+
+    $DAEMON &
+    echo $!>$PIDFILE
+
+    dhclient &
+
+    log_end_msg 0
+
+    exit $EXIT
+    ;;
+  stop)
+    kill `cat $PIDFILE`
+    rm $PIDFILE
+    killall $NAME
+    ;;
+  restart)
+        $0 stop
+        sleep 1
+        $0 start
+        ;;
+
+  *)
+        log_success_msg "Usage: $NAME {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,70 @@
+
+<ng-template #popContent>
+    <span class="{{clusterConnection.Name}}">
+            Connection Status: <b>{{clusterConnection.Status}}</b></span>
+    <br /><div *ngIf="clusterConnection['Name']==='wait'" class="response">
+        <app-mat-progress-bar></app-mat-progress-bar>
+    </div>
+</ng-template>
+
+<div>
+    <div class="main">
+        <img *ngIf="hostInfo.OpMode!=='NODE' && clusterConnection['Name']==='ok' && hostInfo.Cluster.Password" class="icon"
+             src="../../assets/onLocked.png"
+             [ngbPopover]="popContent"
+             triggers="mouseenter:mouseleave"
+             popoverTitle="Cluster {{hostInfo.Cluster.Name}} ({{hostInfo.Cluster.MasterIP}})" />
+
+        <img *ngIf="hostInfo.OpMode!=='NODE' && clusterConnection['Name']==='ok' && !hostInfo.Cluster.Password" class="icon"
+             src="../../assets/onUnlocked.png"
+             [ngbPopover]="popContent"
+             triggers="mouseenter:mouseleave"
+             popoverTitle="Cluster {{hostInfo.Cluster.Name}} ({{hostInfo.Cluster.MasterIP}})" />
+
+        <img *ngIf="hostInfo.OpMode!=='NODE' && clusterConnection['Name']!=='ok' && hostInfo.Cluster.Password" class="icon"
+             src="../../assets/onLocked.png"
+             [ngbPopover]="popContent"
+             triggers="mouseenter:mouseleave"
+             popoverTitle="Cluster {{hostInfo.Cluster.Name}} ({{hostInfo.Cluster.MasterIP}})" />
+
+        <img *ngIf="hostInfo.OpMode!=='NODE' && clusterConnection['Name']!=='ok' && !hostInfo.Cluster.Password" class="icon"
+             src="../../assets/onUnlocked.png"
+             [ngbPopover]="popContent"
+             triggers="mouseenter:mouseleave"
+             popoverTitle="Cluster {{hostInfo.Cluster.Name}} ({{hostInfo.Cluster.MasterIP}})" />
+
+        <img *ngIf="hostInfo.OpMode==='NODE' && clusterConnection['Name']==='info'" class="icon"
+             src="../../assets/nodeWait.png"
+             [ngbPopover]="popContent"
+             triggers="mouseenter:mouseleave"
+             popoverTitle="Cluster {{hostInfo.Cluster.Name}} ({{hostInfo.Cluster.MasterIP}})" />
+
+        <img *ngIf="hostInfo.OpMode==='NODE' && clusterConnection['Name']==='ok'" class="icon"
+             src="../../assets/nodeOk.png"
+             [ngbPopover]="popContent"
+             triggers="mouseenter:mouseleave"
+             popoverTitle="Cluster {{hostInfo.Cluster.Name}} ({{hostInfo.Cluster.MasterIP}})" />
+
+    </div>
+
+    <div class="mainSide">
+        <div *ngIf="hostInfo.Cluster.Name">
+            <a target="_blank" class="text-link"
+               href="http://{{this.hostInfo.Cluster.MasterIP}}:{{this.hostInfo.Cluster.PortFrontend}}">Cluster login page
+            </a>
+        </div>
+        <div class="text-link"
+              *ngIf="hostInfo.Cluster.Name">Queue status: <b>{{hostInfo.Cluster.Queue}}</b>
+        </div>
+    </div>
+    <div class="mainSide">
+        <div *ngIf="userSession.Module==='Admin' &&
+                  hostInfo.OpMode==='NODE' &&
+                  hostInfo.Cluster.MasterIP !=''" class="exit">
+            <button class="btn-sm btn-danger mr-1" (click)="setOpMode();false;">Exit Cluster</button>
+        </div>
+    </div>
+</div>
+
+
+

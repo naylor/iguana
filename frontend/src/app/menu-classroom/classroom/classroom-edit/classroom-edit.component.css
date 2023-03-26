@@ -1,0 +1,35 @@
+.form-control {
+  max-width: 500px;
+}
+
+.text {
+  min-width: 500px !important;
+  display: block;
+}
+
+.date {
+  min-width: 100px !important;
+  display: block;
+}
+
+.number {
+  min-width: 50px !important;
+  display: block;
+}
+
+.card {
+  white-space: pre-line !important;
+}
+
+
+ul, li {list-style-type: none;}
+
+
+.ck-editor__editable_inline {
+  min-height: 500px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}

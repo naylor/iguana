@@ -1,0 +1,10 @@
+/deep/.mat-dialog-container {
+  background: #418ad5 !important;
+  display: block;
+  white-space: pre-line;
+  font-size: 12px;
+}
+
+textarea:focus, input:focus{
+  outline: none;
+}

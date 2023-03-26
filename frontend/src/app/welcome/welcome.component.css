@@ -1,0 +1,16 @@
+span {
+  font-size: 14px;
+  display: block;
+  white-space: pre-line;
+}
+
+.welcome {
+  width: 100%;
+  margin: auto;
+  padding: 10px;
+}
+
+.system {
+  width: 70%;
+  float: left;
+}

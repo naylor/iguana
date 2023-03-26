@@ -1,0 +1,136 @@
+
+.hostInfo {
+  text-align: right;
+  padding: 0 50px 0 0 !important;
+}
+
+main {
+  margin-left: 25px !important;
+  margin-top: -40px !important;
+}
+
+.col-md-9 {
+  margin-top: -15px !important;
+}
+
+.mb-4, .my-4 {
+  margin-left: -15px !important;
+
+}
+
+.jumbotron {
+  padding: 1rem 0rem;
+}
+
+.navbar {
+  padding: 0 0 0 0;
+  margin-top: -20px !important;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.MASTER {
+  background-color: #878787;
+}
+
+footer {
+  background-color: #e9ecef;
+}
+
+.mat-drawer-container {
+  background-color: rgb(111 111 111 / 32%);
+  color: #fff;
+}
+
+.mat-drawer {
+  background: #fff;
+  color: #000;
+}
+
+.mat-drawer.mat-drawer-side {
+  /* background: rgb(111 111 111 / 32%); */
+}
+
+.mat-sidenav-fixed {
+  /* background: rgb(111 111 111 / 32%); */
+}
+
+.mat-drawer-container {
+  background-color: #fff;
+  color: #000;
+}
+
+::ng-deep .mat-expansion-indicator {
+  background: rgba(255, 255, 255, 0.56) !important;
+  color: #000 !important;
+}
+
+::ng-deep .mat-expansion-panel {
+  background: #fff;
+  color: #000;
+  /* box-shadow: 0 0 0 0 !important; */
+}
+
+.mat-list-base {
+  width: 95%;
+  padding-left: 8px;
+}
+
+::ng-deep .mat-toolbar {
+  background: rgb(208 208 208) !important;
+}
+
+::ng-deep .mat-drawer-inner-container {
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .mat-expansion-panel-header-title {
+  color: #000 ;
+}
+
+::ng-deep .mat-expansion-panel:not([class*=mat-elevation-z]) {
+   box-shadow: 0 0 0 0 !important;
+}
+
+::ng-deep .mat-expansion-panel {
+  /* background: rgb(111 111 111 / 32%); */
+  /* display: block */
+  color: #000;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 5px 5px 5px 20px !important;
+}
+
+::ng-deep .card {
+  border-radius: 0px !important;
+}
+
+::ng-deep .mat-divider {
+  border-top-color: #000 !important;
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+}
+
+.down {
+  min-height: 200px;
+}
+
+.version {
+  font-size: 12px;
+}
+
+.iguana {
+  color: #000;
+}
+
+.noIP {
+  font-size: 12px;
+  color: #f60202;
+}

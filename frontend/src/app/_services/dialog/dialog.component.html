@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>{{modalTitle}}</h2>
+<mat-dialog-content>{{modalText}}</mat-dialog-content>
+
+<mat-dialog-content *ngIf="modalInput">
+  <span *ngFor="let m of modalInput">
+    <input type="{{m.Type}}" [(ngModel)]="m.Model" placeholder="{{m.Title}}">
+  </span>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true" (click)="close('YES')">{{modalYes}}</button>
+  <button mat-button mat-dialog-close>{{modalNo}}</button>
+</mat-dialog-actions>

@@ -1,0 +1,79 @@
+.tags {
+  min-height: 150px;
+  min-width: 20vw;
+  max-width: calc(100vw - 35px);
+}
+
+.module {
+  padding: 0.5em;
+  margin-left: -20px;
+  display: inline-block;
+  line-height: 40px;
+}
+
+.emptyClassroom {
+  margin-top: 10px;
+}
+
+.hasClassroom {
+  margin-top: -10px;
+}
+
+.divTable{
+  display: table;
+  padding-left: 20px;
+}
+.divTableRow {
+  display: table-row;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+}
+.divTableCell, .divTableHead {
+  display: table-cell;
+  vertical-align: middle;
+}
+.divTableHeading {
+  background-color: #EEE;
+  display: table-header-group;
+  font-weight: bold;
+}
+.divTableFoot {
+  background-color: #EEE;
+  display: table-footer-group;
+  font-weight: bold;
+}
+.divTableBody {
+  display: table-row-group;
+  font-size: 12px;
+}
+
+/deep/ .mat-primary .mat-option.mat-selected:not(.mat-option-disabled) {
+  color: #fff;
+}
+
+/deep/ .mat-select-panel {
+  /* background-color: #007bff; */
+  color: #0a0a0a;
+}
+
+/deep/ .mat-select-value {
+  color: #000;
+}
+
+/deep/ .mat-select-arrow {
+  color:  #000;
+}
+
+/deep/ .mat-form-field-type-mat-select .mat-form-field-label {
+  color:  #000;
+}
+
+/deep/ .mat-form-field.mat-focused .mat-form-field-ripple {
+  background-color: #000;
+}
+
+/deep/ .mat-hint {
+  color: blue;
+}

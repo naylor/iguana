@@ -1,0 +1,125 @@
+/* in the css file or in a style block */
+.code {
+  white-space: pre-wrap;
+  margin-top: 20px;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.iconServer {
+  background: url('assets/server.png');
+  background-size: 20px;
+  height: 20px;
+  width: 20px;
+  display: block;
+  /* Other styles here */
+}
+
+.iconTask {
+  background: url('assets/tasks.png');
+  background-size: 20px;
+  height: 20px;
+  width: 20px;
+  display: block;
+  /* Other styles here */
+}
+
+.iconMax {
+  height: 20px;
+  width: 20px;
+}
+
+/* COMMON CHILD CSS */
+.card-header span {
+  font-size: 22px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.response {
+  font-size: 12px;
+}
+
+.ok {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.info {
+  color: #856404;
+  background-color: #ffcc3c;
+  border-color: #ffeeba;
+}
+
+.error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+#loader-wrapper {
+  display: grid;
+  place-items: center;
+  margin-top: calc(20vh);
+  background: #fff;
+  z-index: 1000;
+}
+
+/* Monaco Editor */
+.myGlyphMarginClass {
+  background: red;
+}
+.myContentClass {
+  background: rgba(255, 255, 255, 0.56);
+}
+
+.myContentClass {
+  background: none;
+}
+
+.monaco-remote-cursor {
+  position: absolute;
+  pointer-events: none;
+  z-index: 4000;
+  width: 2px;
+}
+
+.monaco-remote-cursor:before {
+  content: "";
+  width: 6px;
+  height: 5px;
+  display: block;
+  margin-left: -2px;
+  margin-top: 0;
+  z-index: 4000;
+  background: inherit;
+}
+
+.monaco-remote-cursor-tooltip {
+  position: absolute;
+  white-space: nowrap;
+  color: #000;
+  text-shadow: 0 0 1px #fff;
+  opacity: 1.0;
+  font-size: 12px;
+  padding: 2px;
+  font-family: sans-serif;
+  z-index: 4000;
+
+  transition: opacity 0.5s ease-out;
+  -webkit-transition: opacity 0.5s ease-out;
+  -moz-transition: opacity 0.5s ease-out;
+  -ms-transition: opacity 0.5s ease-out;
+  -o-transition: opacity 0.5s ease-out;
+}
+
+.monaco-remote-selection {
+  position: absolute;
+  pointer-events: auto;
+  opacity: 0.3;
+  background: blue;
+}

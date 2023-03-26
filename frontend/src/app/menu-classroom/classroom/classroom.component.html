@@ -1,0 +1,104 @@
+<div class="card m-3">
+    <h6 class="card-header">
+        <div style="float: left">
+            <span *ngIf="notSel===1">Classroom</span>
+            <span class="{{classroom.Enabled ? 'Enabled':'Disabled'}}">
+            {{classroom.Name}} ({{classroom.Enabled ? "Enabled":"Disabled"}})
+            </span>
+        </div>
+        <div style="float: right" *ngIf="classroom.Name && (userSession.Module==='Admin' ||
+                           classroomModule==='Lecture' ||
+                           classroom.IdUser==userSession.Id)">
+            <button
+                    class="btn-sm btn-primary" style="width:100px" (click)="disableClassroom()">
+                {{classroom.Enabled ? "Disable":"Enable"}}
+            </button>
+            <button
+                    class="btn-sm btn-primary" style="width:100px" (click)="editClassroom()">Edit
+            </button>
+        </div>
+    </h6>
+    <div class="col-md-12 user-container">
+        <div *ngIf="notSel===1 ">
+            Please, select one classroom.
+        </div>
+
+        <div *ngIf="notSel===0 && loadC===0">
+            <app-mat-progress-bar></app-mat-progress-bar>
+        </div>
+
+        <div *ngIf="(!classroom && loadC===1)">
+            No records found.
+        </div>
+
+        <div class="form-group" *ngIf="(classroom && loadC===1)" style="margin-top: 15px;">
+
+            <div class="form-row">
+
+                <div class="col-md-6 user-container">
+                    <div class="card m-12">
+                        <div class="card-header" style="min-height: 141px;">
+                            Description
+                            <mat-divider></mat-divider>
+                            <br />
+                            <div [innerHTML]="classroom.Description" class="description"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 user-container">
+                    <div class="card m-12">
+                        <div class="card-header" style="min-height: 141px;">
+                            <p class="description" *ngIf="classroomModule || userSession.Module==='Admin'">Self-registration key: {{classroom.KeyAccess}}</p>
+
+                            <div class="col-md-12 user-container" *ngIf="!classroomModule && userSession.Module!=='Admin'">
+                                <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="KeyAccess">Self-registration key:</label>
+                                            <input type="text" formControlName="KeyAccess" placeholder="KeyAccess"
+                                                   name="KeyAccess" class="form-control" id="KeyAccess">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <button class="btn-sm btn-success">Insert Key</button>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="submitted && fe.KeyAccess.errors" class="error response">
+                                        <div *ngIf="fe.KeyAccess.errors.maxlength">The key must be up to 60 characters
+                                            long
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+
+                            <p class="description">Maximum number of students: {{classroom.MaxStudents}}</p>
+                            Members
+                            <mat-divider></mat-divider>
+                            <div *ngIf="loadM===0">
+                                <app-mat-progress-bar></app-mat-progress-bar>
+                            </div>
+
+                            <div *ngIf="(!classroom && loadM===1)">
+                                No members found.
+                            </div>
+                            <table class="table table-striped">
+                                <tr *ngFor="let u of users">
+                                    <td>
+                                        <img src="../../../assets/{{u.Module}}.jpg" width="20px"/>
+                                        <span class="description">{{u.Module}} - {{u.Name}}: {{u.Email}}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+

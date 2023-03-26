@@ -1,0 +1,9 @@
+/usr/lib/systemd/system/getty@.service:
+ExecStart=-/sbin/agetty --autologin user --login-program /usr/local/src/ICS/welcome.sh --noissue --noclear %I $TERM
+
+/etc/issue:
+##################################
+#  Welcome Iguana Cluster System #
+##################################
+
+

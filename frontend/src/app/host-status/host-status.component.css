@@ -1,0 +1,11 @@
+.tags {
+  min-height: 150px;
+  min-width: 20vw;
+  max-width: calc(100vw - 35px);
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+}
+

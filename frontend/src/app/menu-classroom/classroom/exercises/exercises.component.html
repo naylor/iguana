@@ -1,0 +1,133 @@
+<div class="card m-3">
+  <h6 class="card-header">
+    <div style="float: left">
+      <span>Exercises</span>
+    </div>
+
+    <div style="float: right">
+      <button
+              class="btn-sm btn-primary" style="width:110px" (click)="setKey()">Exercise Key
+      </button>
+    </div>
+
+    <div style="float: right">
+      <button *ngIf="userSession.Module==='Admin' || module==='Lecturer' || module==='Assistant'"
+              class="btn-sm btn-primary" style="width:100px" (click)="addExercise()">Add</button>
+    </div>
+  </h6>
+
+  <div *ngIf="load===0">
+    <app-mat-progress-bar></app-mat-progress-bar>
+  </div>
+
+  <div *ngIf="(exercises?.length <= 0 && load===1)">
+    No records found.
+  </div>
+
+  <div class="filter">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($any($event.target).value)" placeholder="Filter: ">
+    </mat-form-field>
+  </div>
+
+  <div class="example-container mat-elevation-z8 ">
+
+    <mat-table [dataSource]="dataSource" class="table table-striped" matSort>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="Id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.Id}} </mat-cell>
+      </ng-container>
+
+      <!-- Title Column -->
+      <ng-container matColumnDef="Title">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Title </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.hasGroup ? row.Title+" ("+row.hasGroup+")" : row.Title}} </mat-cell>
+      </ng-container>
+
+      <!-- MaxSubmissions Column -->
+      <ng-container matColumnDef="MaxSubmissions">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span placement="top"
+                ngbTooltip="Maximum Number of Submissions / Timeout">MNS/T</span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.MaxSubmissions}}/{{row.MaxTimeout}}s </mat-cell>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="Date">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Expiration Date </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <div style="word-wrap: break-word;"> {{row.Date}}<br />
+            <span *ngIf="row.IsExpired < 0" class="expired">[expired]</span>
+            <span *ngIf="row.IsExpired > 0 && row.IsExpired <= 86400" class="Notexpired">[expires soon!]</span>
+            <span *ngIf="row.IsExpired > 86400" class="Notexpired">[about {{(row.IsExpired/60/60/24).toFixed(0)}} day(s)]</span>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Response Time Column -->
+      <ng-container matColumnDef="ExecTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <span placement="top"
+                          ngbTooltip="Admin Response Time">RT</span>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.ExecTime}} </mat-cell>
+      </ng-container>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="CheckCount">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          <span placement="top"
+                ngbTooltip="Admin Code Analysis">Code Analysis</span>
+          </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="action-link">
+          <a href="#" placement="top" ngbTooltip="Click to see code analysis"
+             (click)="showList(element.CheckList); false;">
+            <mat-progress-bar id="checkBar" mode="determinate" value="{{element.CheckCount}}"></mat-progress-bar>
+          </a>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Delivered Column -->
+      <ng-container matColumnDef="Answers">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Delivered </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="action-link">
+          <div style="word-wrap: break-word;">
+            <span *ngIf="userSession.Module!=='Admin'">{{element.Name}}</span>
+            <button placement="top" ngbTooltip="{{element.cAnswers}} exercise answers"
+                    mat-icon-button (click)="viewAnswer(element, element.IsExpired)">
+              <mat-icon>list</mat-icon> ({{element.cAnswers}})
+            </button>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container *ngIf="userSession.Module==='Admin' || module==='Lecturer' || module==='Assistant'" matColumnDef="Action">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="action-link">
+          <div style="word-wrap: break-word;">
+            <button mat-icon-button
+                    (click)="deleteExercise(element)">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+            <button mat-icon-button
+                    (click)="editExercise(element)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
+
+  </div>
+</div>

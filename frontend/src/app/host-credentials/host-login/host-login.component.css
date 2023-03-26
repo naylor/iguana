@@ -1,0 +1,86 @@
+.loginMain {
+  display: flex; flex-wrap: wrap; align-content: center;
+}
+
+.PrimaryNav a, .PrimaryNav a.active, .PrimaryNav .nolink {
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.Button--redOutline {
+  color: #fff;
+  background-color: transparent;
+  text-transform: uppercase;
+  border: 2px solid #e22866;
+}
+.Button--red, .Body .node-application #FormWrap .okta-form input[type="submit"], .Body .node-application #FormWrap .okta-form textarea[type="submit"], .Body .node-application #FormWrap .okta-form select[type="submit"], .Body .block-marketo #FormWrap .okta-form input[type="submit"], .Body .block-marketo #FormWrap .okta-form textarea[type="submit"], .Body .block-marketo #FormWrap .okta-form select[type="submit"] {
+  color: #fff;
+  background-color: #e22866;
+  text-transform: uppercase;
+}
+
+.host{
+  display: flex;
+}
+
+.name {
+  width: 180px;
+}
+
+.exit {
+  flex-grow: 1;
+}
+
+.addUser {
+  width: 30px;
+  margin-top: 10px;
+}
+
+input {
+  margin-bottom: 0.2em;
+}
+
+.card-body {
+  padding: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 0rem;
+}
+
+.col-5 {
+  max-width: 20%;
+}
+
+.userStatus {
+  padding: 0.5em;
+}
+
+.userStatus span {
+  display: block;
+  font-size: 12px;
+}
+
+.session {
+  font-size: 12px;
+}
+
+.ok {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.info {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+
+.error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}

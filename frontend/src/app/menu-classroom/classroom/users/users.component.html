@@ -1,0 +1,78 @@
+<div class="card m-3">
+    <h6 class="card-header">
+        <div style="float: left">
+            <span>Users</span>
+        </div>
+        <div style="float: right">
+            <button class="btn-sm btn-primary" (click)="addUser()">New</button>
+        </div>
+        <div style="float: right; width: 50px;">
+            <button class="btn-sm btn-primary" (click)="joinUser()">Join</button>
+        </div>
+    </h6>
+
+    <div *ngIf="load===0">
+        <app-mat-progress-bar></app-mat-progress-bar>
+    </div>
+
+    <div *ngIf="(users?.length <= 0 && load===1)">
+        No records found.
+    </div>
+
+    <div class="filter">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilter($any($event.target).value)" placeholder="Filter: ">
+        </mat-form-field>
+    </div>
+
+    <div class="mat-elevation-z8 ">
+
+        <mat-table [dataSource]="dataSource" matSort>
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="Id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Id}} </mat-cell>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="Name">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Name}} </mat-cell>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="Email">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Email}} </mat-cell>
+            </ng-container>
+
+            <!-- Module Column -->
+            <ng-container matColumnDef="Module">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Module </mat-header-cell>
+                <mat-cell *matCellDef="let row"> {{row.Module}} </mat-cell>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="Action">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+                <mat-cell *matCellDef="let element" class="action-link">
+                    <button *ngIf="(element.Module!=='Lecturer' && module==='Assistant')
+                    || module==='Lecturer' || userSession.Module==='Admin'" mat-icon-button (click)="deleteUser(element)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button *ngIf="(element.Module!=='Lecturer' && module==='Assistant')
+                    || module==='Lecturer' || userSession.Module==='Admin'" mat-icon-button (click)="editUser(element)" style="margin-left: 20px;">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;">
+            </mat-row>
+        </mat-table>
+
+        <mat-paginator [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+<div class="card m-3">
+  <h6 class="card-header">
+    <div style="float: left">
+      <span>{{fe.Id.value ? "Edit":"Add"}} Classroom</span>
+    </div>
+    <div style="float: right">
+      <button class="btn-sm btn-success" (click)="setRoute('view-classroom')" style="margin-left: 20px;">Classroom</button>
+    </div>
+  </h6>
+  <br />
+  <div class="col-md-12 group-container">
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="Name">Name:</label>
+        <input class="text" type="text" formControlName="Name" name="Name" id="Name">
+        <div *ngIf="submitted && fe.Name.errors" class="error response">
+          <div *ngIf="fe.Name.errors.required">Field Name is required</div>
+          <div *ngIf="fe.Name.errors.minlength">Name field must have a minimum of 5 characters</div>
+          <div *ngIf="fe.Name.errors.maxlength">Name must be a maximum of 50 characters</div>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <label for="KeyAccess">Self-registration Key:</label>
+        <input class="text" type="text" min="0" max="60" formControlName="KeyAccess"
+               name="KeyAccess" id="KeyAccess">
+        <div *ngIf="submitted && fe.KeyAccess.errors" class="error response">
+          <div *ngIf="fe.KeyAccess.errors.maxlength">The key must be up to 60 characters long</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="MaxStudents">Maximum Number of Students:</label>
+        <input class="number" type="number" min="0" max="1000" formControlName="MaxStudents"
+               name="MaxStudents" id="MaxStudents">
+        <div *ngIf="submitted && fe.MaxStudents.errors" class="error response">
+          <div *ngIf="fe.MaxStudents.errors.max">The maximum number of students allowed is 100</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="Name">Description:</label>
+        <ckeditor [editor]="Editor" [config]="config" formControlName="Description"></ckeditor>
+      </div>
+
+
+      <div class="form-group">
+        <button class="btn-sm btn-success">{{fe.Id.value? "Update":"Insert"}}</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+

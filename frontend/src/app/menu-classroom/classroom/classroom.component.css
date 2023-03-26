@@ -1,0 +1,45 @@
+.user-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.table td, .table th {
+    padding: initial !important;
+}
+
+button {
+    margin-left: 5px;
+}
+
+.mat-progress-bar{
+    height: 20px;
+}
+
+::ng-deep .mat-progress-bar-buffer {
+    background: #E4E8EB;
+}
+
+#checkBar {
+    border-radius: 2px;
+    width: 100px !important;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+}
+
+.description {
+    font-size: 12px;
+}
+
+.Enabled {
+    color: #1231da;
+}
+.Disabled {
+    color: #9d1e15;
+}
+
+::ng-deep h1 {
+    font-size: 1.5rem !important;
+}

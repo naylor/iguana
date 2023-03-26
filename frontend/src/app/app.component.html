@@ -1,0 +1,113 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="tr"
+               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+               [mode]="(isHandset$ | async) ? 'over' : 'side'">
+    <mat-toolbar>
+      <div class="iguana">
+        <h6><b>Iguana Cluster System</b>
+          <br /><span class="version">{{version}}</span>
+        </h6>
+      </div>
+
+      <img class="icon" src="../../assets/iguana.png" />
+    </mat-toolbar>
+
+
+    <mat-nav-list>
+
+      <mat-accordion class="example-headers-align">
+      <mat-divider *ngIf="hostConnection['Name']==='ok'"></mat-divider>
+
+        <app-menu-classroom></app-menu-classroom>
+
+        <mat-divider *ngIf="hostConnection['Name']==='ok'"></mat-divider>
+
+        <mat-expansion-panel *ngIf="hostConnection['Name']==='ok' && hostInfo['IsMaster']"
+                             (opened)="panelOpenState = true"
+                             (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Management
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <app-menu-management></app-menu-management>
+          </div>
+        </mat-expansion-panel>
+
+
+        <mat-divider *ngIf="hostConnection['Name']==='ok'"></mat-divider>
+
+      </mat-accordion>
+
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="accent">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+
+      <app-host-status
+              [hostInfo]="hostInfo"
+              [hostConnection]="hostConnection">
+      </app-host-status>
+
+      <span class="spacer"></span>
+
+      <app-cluster-info *ngIf="(hostInfo.OpMode==='NODE' ||
+                                hostInfo.OpMode==='MASTER') &&
+                                hostConnection['Name']==='ok'"
+                        [hostInfo]="hostInfo"
+                        [hostConnection]="hostConnection"
+                        [clusterConnection]="clusterConnection">
+      </app-cluster-info>
+      <span class="spacer"></span>
+
+      <div class="noIP" *ngIf="hostInfo.IP===''">
+        Attention, the system was unable to identify the host IP.
+        Go to My Panel -> Settings and define the Public Host Interface.
+      </div>
+
+      <span class="spacer"></span>
+
+      <div class="hostInfo">
+
+        <app-host-credentials *ngIf="hostConnection['Name']==='ok'"
+                              [hostInfo]="hostInfo">
+        </app-host-credentials>
+
+      </div>
+
+    </mat-toolbar>
+    <ng-content></ng-content>
+
+
+    <!--Main layout-->
+    <main>
+      <div class="container-fluid mt-5">
+        <div class="row wow fadeIn">
+
+          <div class="col-md-12 mb-4" *ngIf="hostConnection['Name']==='ok'">
+            <router-outlet></router-outlet>
+          </div>
+          <div class="col-md-12 mb-4 down" *ngIf="hostConnection['Name']!=='ok'">
+            Trying to connect to the server...
+            <app-mat-progress-bar></app-mat-progress-bar>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- Footer -->
+<footer class="page-footer font-small teal pt-4">
+  <div class="footer-copyright text-center py-3">© 2021 Copyright
+    <a href="http://lasdpc.icmc.usp.br/"> LaSDPC USP-ICMC</a>
+  </div>
+</footer>
+<!-- Footer -->

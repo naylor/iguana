@@ -1,0 +1,70 @@
+.mat-table {
+  background: #fff;
+}
+mat-footer-row, mat-header-row, mat-row, td.mat-cell, td.mat-footer-cell, th.mat-header-cell {
+  border-bottom-color: rgba(0,0,0,.12);
+}
+.mat-cell, .mat-footer-cell {
+  color: #000;
+}
+.mat-header-cell {
+  color: rgba(0,0,0,.7);
+}
+.mat-header-cell {
+  font-size: 14px;
+  font-weight: 700;
+}
+.mat-paginator, .mat-header-row {
+  background-color: rgba(0,0,0,.03)
+}
+.mat-paginator, .mat-paginator-page-size .mat-select-trigger {
+  color: rgba(0,0,0,.7);
+}
+/deep/ .mat-form-field-label {
+  color: rgba(0,0,0,.7) !important;
+  font-weight: 700 !important;
+}
+.mat-form-field {
+  font-size: 14px;
+  margin-left: 10px;
+}
+.mat-column-Action {
+  flex: 0 0 40%;
+}
+.mat-column-Id {
+  flex: 0 0 10%;
+}
+.mat-column-Nome {
+  flex: 0 0 50%;
+}
+/deep/ .mat-elevation-z8 {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0), 0 8px 10px 1px rgba(0, 0, 0, 0), 0 3px 14px 2px rgba(0, 0, 0, 0);
+}
+input {
+  width: 100%;
+  background-color: #fcfcfc;
+  border: 0;
+  border-bottom: 2px solid lightgrey;
+  padding: 10px;
+}
+/deep/ .mat-form-field.mat-focused .mat-form-field-ripple {
+  background-color: #fff !important;
+}
+/deep/ .mat-select-value, .mat-paginator, .mat-paginator-page-size .mat-select-trigger {
+  color: #000 !important;
+}
+.mat-row:nth-child(2n+1){
+  background-color: rgba(187, 196, 201, 0.16) !important;
+}
+.mat-row:not(:nth-child(2n+1)){
+  background-color:#ffffff !important;
+}
+.user-container {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+}
+
+button {
+  margin-left: 20px;
+}

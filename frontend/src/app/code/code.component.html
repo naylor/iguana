@@ -1,0 +1,492 @@
+<md-button class="md-fab md-fab-bottom-right" aria-label="Add a category">
+    <button type="button" name="btnCompile" (click)="onSubmitCode(); false;" [disabled]="disabled"
+            class="btn btn-primary">{{btnCompile}}
+    </button>
+    <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
+        <button (click)="false;" class="btn btn-primary dropdown-toggle-split" ngbDropdownToggle
+                [disabled]="disabled"></button>
+        <div class="dropdown-menu" ngbDropdownMenu>
+            <button (click)="onClick('Compile'); false;" ngbDropdownItem>Compile</button>
+            <button (click)="onClick('Compile and Run'); false;" ngbDropdownItem>Compile and Run</button>
+        </div>
+    </div>
+</md-button>
+
+<div class="codeButtons">
+    <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-secondary" (click)="false;" id="dropdownBasic1" ngbDropdownToggle>Theme</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button (click)="setTheme('vs-dark'); false;" ngbDropdownItem>Dark</button>
+            <button (click)="setTheme('vs'); false;" ngbDropdownItem>Light</button>
+        </div>
+    </div>
+    <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-secondary" (click)="false;" id="dropdownBasic2" ngbDropdownToggle>Font Size
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+            <button (click)="setFont(8); false;" ngbDropdownItem>8</button>
+            <button (click)="setFont(10); false;" ngbDropdownItem>10</button>
+            <button (click)="setFont(12); false;" ngbDropdownItem>12</button>
+            <button (click)="setFont(14); false;" ngbDropdownItem>14</button>
+            <button (click)="setFont(16); false;" ngbDropdownItem>16</button>
+            <button (click)="setFont(18); false;" ngbDropdownItem>18</button>
+            <button (click)="setFont(20); false;" ngbDropdownItem>20</button>
+        </div>
+    </div>
+    <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-secondary" (click)="false;" id="dropdownBasic3" ngbDropdownToggle>MiniMap
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic3">
+            <button (click)="setMiniMap('true'); false;" ngbDropdownItem>Show</button>
+            <button (click)="setMiniMap('false'); false;" ngbDropdownItem>Hide</button>
+        </div>
+    </div>
+    <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-secondary" (click)="false;" id="dropdownBasic4" ngbDropdownToggle>Load Example
+            Code
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic4">
+            <button (click)="getCodeExample('MPI'); false;" ngbDropdownItem>MPI</button>
+            <button (click)="getCodeExample('OpenMP'); false;" ngbDropdownItem>OpenMP</button>
+            <button (click)="getCodeExample('CUDA'); false;" ngbDropdownItem>CUDA</button>
+            <button (click)="getCodeExample('OpenMP_MPI'); false;" ngbDropdownItem>Hybrid OpenMP/MPI</button>
+        </div>
+    </div>
+    <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-secondary" (click)="false;" id="dropdownBasic5" ngbDropdownToggle>Code Saving
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic5">
+            <button (click)="codeTempCall('auto'); false;" ngbDropdownItem>Auto (default)</button>
+            <button (click)="codeTempCall('none'); false;" ngbDropdownItem>None</button>
+            <button (click)="codeTempCall('load'); false;" ngbDropdownItem>Load last saved code</button>
+        </div>
+    </div>
+    <div ngbDropdown *ngIf="hostInfo.Queue == 'Off'" class="d-inline-block">
+        <button type="button" class="btn btn-outline-secondary"
+                (click)="onQueue()"
+                ngbPopover="If turn on, you will wait for your turn in the queue, so your code will run without concurrency."
+                triggers="mouseenter:mouseleave" popoverTitle="Queuing System">
+            Queue {{queue?"On":"Off"}}
+        </button>
+    </div>
+
+</div>
+<div *ngIf="load===0">
+    <app-mat-progress-bar></app-mat-progress-bar>
+</div>
+
+<ng-template #popContent>
+   <span *ngFor="let cpu of codePairUsers">
+       {{cpu.UserName}} <br />
+    </span>
+</ng-template>
+
+<ngx-monaco-editor *ngIf="codeInGroup==1"
+        [ngbPopover]="popContent"
+        triggers="mouseenter:mouseleave"
+        popoverTitle="Users Online in the Editor"
+        class="editor"
+        [options]="editorOptions"
+        [ngModelOptions]="{standalone: true}"
+        [(ngModel)]="code.Code"
+        (ngModelChange)="onChange($event)"
+        (keydown)="onKeydownEvent($event)"
+        (onInit)="onInit($event)">
+</ngx-monaco-editor>
+
+<ngx-monaco-editor *ngIf="codeInGroup==0"
+        class="editor"
+        [options]="editorOptions"
+        [ngModelOptions]="{standalone: true}"
+        [(ngModel)]="code.Code"
+        (ngModelChange)="onChange($event)"
+        (keydown)="onKeydownEvent($event)"
+        (onInit)="onInit($event)">
+</ngx-monaco-editor>
+
+<div class="card m-12 codeRun">
+    <form [formGroup]="codeForm" enctype="multipart/form-data">
+
+        <div class="form-group" style="margin-top: 15px;">
+
+            <div class="form-row">
+
+                <div class="col-md-{{exercise['gId'] ? '8':'12'}} user-container">
+
+
+                    <div #ResultsTab></div>
+
+                    <ul ngbNav #nav="ngbNav" [(activeId)]="navActive" class="nav-tabs" [destroyOnHide]="false">
+                        <li ngbDropdown [ngbNavItem]="1">
+
+                            <a ngbNavLink ngbDropdownToggle>Parameters</a>
+                            <div ngbDropdownMenu>
+                                <button (click)="setManualParameters('MPI'); false;" ngbDropdownItem>MPI</button>
+                                <button (click)="setManualParameters('OpenMP'); false;" ngbDropdownItem>OpenMP</button>
+                                <button (click)="setManualParameters('CUDA'); false;" ngbDropdownItem>CUDA</button>
+                                <div class="dropdown-divider"></div>
+                                <button (click)="setManualParameters('OpenMP_MPI'); false;" ngbDropdownItem>Hybrid
+                                    OpenMP/MPI
+                                </button>
+                                <div class="dropdown-divider"></div>
+                                <button (click)="setManualParameters('Manual'); false;" ngbDropdownItem>Manual</button>
+                            </div>
+                            <ng-template ngbNavContent>
+
+                                <div class="form-row codeRun">
+                                    <div class="col-md-6">
+                                        Command (compile)
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" formControlName="CompCmd" (keyup)="updateParameters()"
+                                               class="form-control"
+                                               [ngClass]="{ 'is-invalid': submitted && fc.CompCmd.errors }"/>
+                                        <div *ngIf="submitted && fc.CompCmd.errors" class="error response">
+                                            <div *ngIf="fc.CompCmd.errors.required">Field is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row codeRun">
+                                    <div class="col-md-6">
+                                        <a href="#" ngbPopover="The binary and code file name must always be main."
+                                           triggers="mouseenter:mouseleave" popoverTitle="Attention">
+                                            Arguments (compile)
+                                        </a>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" formControlName="CompArgs" (keyup)="updateParameters()"
+                                               class="form-control"
+                                               [ngClass]="{ 'is-invalid': submitted && fc.CompArgs.errors }"/>
+                                        <div *ngIf="submitted && fc.CompArgs.errors" class="error response">
+                                            <div *ngIf="fc.CompArgs.errors.required">Field is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row codeRun">
+                                    <div class="col-md-6">
+                                        Command (execute)
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" formControlName="ExecCmd" (keyup)="updateParameters()"
+                                               class="form-control"
+                                               [ngClass]="{ 'is-invalid': submitted && fc.ExecCmd.errors }"/>
+                                        <div *ngIf="submitted && fc.ExecCmd.errors" class="error response">
+                                            <div *ngIf="fc.ExecCmd.errors.required">Field is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row codeRun">
+                                    <div class="col-md-6">
+                                        <a href="#" ngbPopover="The binary and code file name must always be main."
+                                           triggers="mouseenter:mouseleave" popoverTitle="Attention">
+                                            Arguments (execute)
+                                        </a>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" formControlName="ExecArgs" (keyup)="updateParameters()"
+                                               class="form-control"
+                                               [ngClass]="{ 'is-invalid': submitted && fc.ExecArgs.errors }"/>
+                                        <div *ngIf="submitted && fc.ExecArgs.errors" class="error response">
+                                            <div *ngIf="fc.ExecArgs.errors.required">Field is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row codeRun">
+                                    <div class="col-md-6">
+                                        <a href="#" ngbPopover="You can add extra arguments for the execution."
+                                           triggers="mouseenter:mouseleave" popoverTitle="Attention">
+                                            Extra Arguments (execute)
+                                        </a>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" formControlName="ExtraArgs" (keyup)="updateParameters()"
+                                               class="form-control"/>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </li>
+
+                        <li [ngbNavItem]="2">
+                            <a ngbNavLink>Files</a>
+                            <ng-template ngbNavContent>
+                                <div *ngIf="!exercise.MaxFileSize && exerciseFiles?.length===0"
+                                     class="card form-group col-md-6">
+                                    No parameters were defined for the use of files in this exercise.
+                                </div>
+
+                                <div class="form-row codeRun">
+
+                                    <div *ngIf="exercise.MaxFileSize || tryACode==='1'" class="col-md-4 card">
+                                        <a href="#" ngbPopover="You can upload a file and use it in your code.
+                            To call the file, use the example shown in the box."
+                                           triggers="mouseenter:mouseleave" popoverTitle="Upload a file">
+                                            Add a file for this run <br/>
+                                        </a>
+                                        <span class="response">(MaxFileSize: {{_util.formatBytes(exercise.MaxFileSize)}})</span>
+                                        <form enctype="multipart/form-data">
+                                            <input class="btn-default" type='file'
+                                                   data-max-size="10"
+                                                   name="media" #selectfile
+                                                   (click)="resetFormFile()">
+                                            <br/>
+                                            <button type="button" (click)="uploadFile()">Upload</button>
+                                            <br/>
+                                            <progress [value]=progress.loaded [max]=progress.total></progress>
+                                            <div class="card-body">
+                                                <div *ngIf="responseFile.Name" class="{{responseFile.Name}}">
+                                                    {{responseFile.Status}}
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <hr/>
+                                        <span *ngIf="fileCodeExecution?.length!==0">
+                                            Files uploaded to the server:
+                                        </span>
+                                        <span *ngFor="let p of fileCodeExecution">
+                                        <a href="#" (click)="setFileCodeExecution(p); false"
+                                           ngbPopover="Click to add the filename in extra arguments."
+                                           triggers="mouseenter:mouseleave" popoverTitle="Add in Extra Arguments">
+                                            {{p}}
+                                        </a>
+                                            <br/>
+
+                                        </span>
+                                        <br/>
+                                        <span>Files uploaded to the server:
+                                                <br/>1. Files are automatically deleted after logout.
+                                                <br/>2. To replace a file, upload another one with the same name.
+                                        </span>
+
+                                    </div>
+
+                                    <div *ngIf="exerciseFiles?.length > 0" class="col-md-4 card">
+                                        <mat-label>
+                                            <a href="#" popoverTitle="This exercise has input files.
+                                You can call them using the example shown in the box."
+                                               triggers="mouseenter:mouseleave" ngbPopover="">
+                                                Add input files
+                                            </a>
+                                        </mat-label>
+
+
+                                        <mat-select [formControl]="files" multiple [disabled]="disabled"
+                                                    class="form-control"
+                                                    (selectionChange)="setFileParameters('')">
+                                            <mat-select-trigger class="selection">
+                                                {{files.value ? files.value[0] : ''}}
+                                                <span *ngIf="files.value?.length > 1">
+        (+{{files.value.length - 1}} {{files.value?.length === 2 ? 'other' : 'others'}})
+                                        </span>
+                                            </mat-select-trigger>
+                                            <mat-option *ngFor="let n of exerciseFiles" [value]="n.FileName">
+                                                {{n.FileName}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <hr/>
+                                        Click the file to download:
+                                        <div *ngFor="let f of exerciseFiles" class="files">
+                                            <div class="form-row text-center">
+                                                <a href="#" (click)="download(f); false;"
+                                                   popoverTitle="Download"
+                                                   triggers="mouseenter:mouseleave"
+                                                   ngbPopover="Click to download this file.">
+                                                    {{f.FileName}}
+                                                </a>
+                                                <br/>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-4 card">
+                                        You can upload a file to the code via STDIN, example:
+                                        <code>
+                                            program < file.txt
+                                        </code>
+                                        <br/>or read an array from a file:
+                                        <code>
+                                            FILE * pFile;
+                                            <br/>
+                                            pFile = fopen ("file.txt","r");
+                                            <br/>
+                                            fscanf(pFile, "%d ", &lin);
+                                            <br/>
+                                            fscanf(pFile, "%d\n", &col);
+                                            <br/>
+                                            fscanf(pFile, "%lf\n", &limiar);
+                                            <br/>
+                                        </code>
+                                    </div>
+
+                                </div>
+
+
+                            </ng-template>
+                        </li>
+
+                        <li [ngbNavItem]="3">
+                            <a ngbNavLink>Nodes <span class="response">(MPI)</span></a>
+                            <ng-template ngbNavContent>
+
+                                <div class="form-group col-md-3">
+                                    Number of process
+                                    <input type="number" formControlName="NumberProc"
+                                           (click)="setManualParameters('');"
+                                           onkeydown="return false"
+                                           onclick="return false"
+                                           class="form-control"
+                                           [ngClass]="{ 'is-invalid': submitted && fc.NumberProc.errors }"/>
+                                    <div *ngIf="submitted && fc.NumberProc.errors" class="invalid-feedback">
+                                        <div *ngIf="fc.NumberProc.errors.required">Number of process is required</div>
+                                        <div *ngIf="fc.NumberProc.errors.min">Process must be at least 1 number</div>
+                                        <div *ngIf="fc.NumberProc.errors.generic">{{fc.numberProc.errors.generic}}</div>
+                                    </div>
+                                    <div *ngIf="msgOverLoad" class="runTimeout">{{msgOverLoad}}</div>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <mat-label>
+                                        <a href="#" ngbPopover="Select one or more nodes to run the code."
+                                           triggers="mouseenter:mouseleave" popoverTitle="Cluster Nodes">
+                                            Nodes
+                                        </a>
+                                    </mat-label>
+                                    <mat-select [formControl]="containers" multiple [disabled]="disabled"
+                                                class="form-control"
+                                                (selectionChange)="setManualParameters('')">
+                                        <mat-select-trigger class="selection">
+                                            {{containers.value ? containers.value[0] : ''}}
+                                            <span *ngIf="containers.value?.length > 1">
+        (+{{containers.value.length - 1}} {{containers.value?.length === 2 ? 'other' : 'others'}})
+                                    </span>
+                                        </mat-select-trigger>
+                                        <mat-option *ngFor="let n of nodes" [value]="n">{{n}}</mat-option>
+                                    </mat-select>
+                                </div>
+                            </ng-template>
+                        </li>
+
+                        <li [ngbNavItem]="4">
+                            <a ngbNavLink>Results</a>
+                            <ng-template ngbNavContent>
+
+                                <div class="card m-3" *ngIf="programStatus">
+                                    <h6 class="card-header">{{btnCompile}} ->| Program {{programStatus}} </h6>
+                                    <span class="queuePosition">Queue Position: {{queueStatus}}</span>
+                                    <span class="runTimeout">Running timeout: {{programTimeout}}</span>
+
+                                    <div *ngIf="sequence?.length > 1">
+                                        <app-mat-progress-bar></app-mat-progress-bar>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div *ngIf="response.Command" class="serviceOk">
+                                            {{command}}
+                                        </div>
+                                        <hr/>
+                                        <div *ngIf="response.Name" class="{{response.Name}}">
+                                            {{response.Status}}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr/>
+
+                                <div class="form-group">
+                                    <ngx-monaco-editor class="editorResult"
+                                                       [options]="resultOptions"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="code.Result">
+                                    </ngx-monaco-editor>
+
+                                </div>
+
+                            </ng-template>
+                        </li>
+
+                        <li [ngbNavItem]="5">
+                            <a ngbNavLink>Special Tags</a>
+                            <ng-template ngbNavContent>
+                                <div class="card-body" *ngIf="msgProcess">
+                                    <table class="table table-striped">
+                                        <tr *ngFor="let p of msgProcess | keyvalue">
+                                            <td>
+                                                <span class='iconServer'></span>
+                                                <b>Node {{p.key}} (Number of process per node: {{p.value.length}})</b>
+                                                <ng-container *ngFor="let r of p.value">
+                                                    <ul>
+                                                        <li>
+                                                            <span class='iconTask'></span>
+                                                            <span>{{r}}</span>
+                                                        </li>
+                                                    </ul>
+                                                </ng-container>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="card m-12">
+                                    <div class="card-body">
+                                        To view custom OpenMPI output by grouping processes with ranks and messages,
+                                        use the tags according to the template below:
+
+                                        <p>Example of use:</p>
+
+                                        <code>printf("message: &#123;M&#125;%s&#123;M&#125; from processor: &#123;P&#125;%s&#123;P&#125;,
+                                            rank: &#123;R&#125;%d&#123;R&#125; out of %d processors\n",
+                                            "Hello World", processor_name, world_rank, world_size);</code>
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </li>
+
+                        <li [ngbNavItem]="6" (click)="getSysInfo(); false;">
+                            <a ngbNavLink>SysInfo</a>
+                            <ng-template ngbNavContent>
+                                <table class="table table-striped">
+                                    <tr *ngFor="let p of sysInfo">
+                                        <td>
+                                            <b>{{p.Name}}:</b> {{p.Value}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </ng-template>
+                        </li>
+
+                    </ul>
+                    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+                </div>
+                <div class="col-md-4 user-container" *ngIf="exercise['gId']">
+                    Group Chat
+                    <mat-divider></mat-divider>
+                    <div style="overflow-y: scroll; min-height: 100px; height: 300px;">
+                        <div *ngFor="let m of chatList index as i">
+                            <div class="{{0 === i % 2 ? 'chat' : 'chat darker'}} {{userId === m.IdUser ? 'user' : ''}}">
+                                <mat-icon class="{{0 === i % 2 ? 'chatIcon-right' : 'chatIcon'}}" mat-list-icon>
+                                    account_circle
+                                </mat-icon>
+                                <p style="width: 100%; margin-left: 10px;">{{m.Text}}</p>
+                                <span class="{{0 === i % 2 ? 'time-right' : 'time-right'}} {{userId === m.IdUser ? 'time-user' : ''}}">{{m.Name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <form (ngSubmit)="sendMsgChat()">
+                        <div class="form-group">
+                            <input id="chatMsg" [(ngModel)]="chatMsg"
+                                   placeholder="type message and press enter"
+                                   class="form-control" style="max-width: 70%;" autofocus
+                                   [ngModelOptions]="{standalone: true}">
+                        </div>
+                        <input class="btn-primary" type="submit" value="add" style="display: none">
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+</div>
+

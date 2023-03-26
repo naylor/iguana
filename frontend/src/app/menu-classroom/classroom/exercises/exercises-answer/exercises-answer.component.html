@@ -1,0 +1,228 @@
+<div class="card m-3">
+    <h6 class="card-header">
+        <div style="float: left">
+            <span>Last Exercise Answers: {{exercise.Title}}</span>
+            <br/>
+            <span *ngIf="(exIsExpired >= 0)"
+                  class="time" style="font-size: 12px;">Time to finish: {{countDown}}
+            </span>
+        </div>
+        <div style="float: right">
+            <button class="btn-sm btn-success" (click)="setRoute('view-exercise')" style="margin-left: 20px;">
+                Exercises
+            </button>
+            <button *ngIf="(userSession.Module==='User' && totalAnswers < exercise.MaxSubmissions
+                                        && exIsExpired >= 0 && !score)
+            || (  (userSession.Module==='Admin' || module==='Assistant' || module==='Lecturer')
+                   && exIsExpired >= 0 && !score
+               )" class="btn-sm btn-primary" style="width:100px" (click)="addAnswer()">
+                Add
+            </button>
+        </div>
+    </h6>
+
+    <div *ngIf="load===0">
+        <app-mat-progress-bar></app-mat-progress-bar>
+    </div>
+
+    <div *ngIf="(answers?.length <= 0 && load===1)">
+        No records found.
+    </div>
+
+    <div class="filter">
+        <mat-form-field>
+            <input matInput (keyup)="applyFilter($any($event.target).value)" placeholder="Filter: ">
+        </mat-form-field>
+        <div *ngIf="userSession.Module==='Admin' || module==='Assistant' || module==='Lecturer' " class="buttonMenu">
+
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn-sm btn-success" (click)="checkSimilarity(); false;" style="margin-left: 20px;">Check
+                    Similarity
+                </button>
+            </div>
+            <div ngbDropdown class="d-inline-block">
+                <button class="btn btn-outline-secondary" (click)="false;" id="dropdownBasic2" ngbDropdownToggle>Export
+                    Results
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+                    <button (click)="download('allExec'); false;" ngbDropdownItem disabled>All Executions</button>
+                    <button (click)="download('lastExec'); false;" ngbDropdownItem>Last Executions</button>
+                    <button (click)="download('allCode'); false;" ngbDropdownItem disabled>All Codes</button>
+                    <button (click)="download('lastCode'); false;" ngbDropdownItem>Last Codes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="example-container mat-elevation-z8 ">
+
+        <table mat-table
+               [dataSource]="dataSource" multiTemplateDataRows
+               class="mat-elevation-z8" matSort>
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="Id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID</th>
+                <td mat-cell *matCellDef="let row"> {{row.Id}}</td>
+            </ng-container>
+
+            <!-- Title Column -->
+            <ng-container matColumnDef="Name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name/Group</th>
+                <td mat-cell *matCellDef="let row;let i = dataIndex;">
+                    <a *ngIf="row.gId && (userSession.Module==='Admin' || module==='Assistant' || module==='Lecturer')"
+                       href="#" (click)="getHistoryGroup(row.gId); false;"
+                       placement="top" ngbTooltip="Click to show the group history">
+                        {{row.gId ? row.gName : row.Name}}
+                    </a>
+                    <a *ngIf="!row.gId || (row.gId && userSession.Module!=='Admin' && module!=='Assistant' && module!=='Lecturer')">
+                        {{row.gId ? row.gName : row.Name}}
+                    </a>
+                </td>
+            </ng-container>
+
+            <!-- ExpirationDate Column -->
+            <ng-container matColumnDef="Date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Submission</th>
+                <td mat-cell *matCellDef="let row"> {{row.Date}}</td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="Status">
+                <th mat-header-cell *matHeaderCellDef> Last Result</th>
+                <td mat-cell *matCellDef="let element" class="action-link">
+                    <button data-html="true" id="button" placement="top"
+                            [ngClass]="(element.Status=='EQUAL')?'btn-sm btn btn-success':'btn-sm btn btn-danger'">
+                        {{element.Status}}
+                    </button>
+                </td>
+            </ng-container>
+
+            <!-- Score Time Column -->
+            <ng-container matColumnDef="Score">
+                <th mat-header-cell *matHeaderCellDef> Score / Feedback</th>
+                <td mat-cell *matCellDef="let row;let i = dataIndex;">
+                    <a *ngIf="userSession.Module==='Admin' || module==='Assistant' || module==='Lecturer'"
+                       href="#" (click)="changeScore(i, row); false;"
+                       placement="top" ngbTooltip="Click to change">
+                        {{row.Score ? row.Score:"No"}}/{{row.Feedback ? "Yes":"No"}}
+                    </a>
+                    <a *ngIf="userSession.Module!=='Admin' && module!=='Assistant' && module!=='Lecturer'"
+                       href="#" (click)="showFeedback(i); false;"
+                       placement="top" ngbTooltip="Click to show the feedback">
+                        {{row.Score ? row.Score:"No"}}/{{row.Feedback ? "Yes":"No"}}
+                    </a>
+                </td>
+            </ng-container>
+
+            <!-- Response Time Column -->
+            <ng-container matColumnDef="TotalEx">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Attempts Number</th>
+                <td mat-cell *matCellDef="let row"> {{row.TotalEx}}</td>
+            </ng-container>
+
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element;let r = dataIndex;" [attr.colspan]="displayedColumns.length">
+                    <div class="element-detail"
+                         [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
+
+                        <table mat-table [dataSource]="element.run" matSort>
+
+                            <!-- Index Column -->
+                            <ng-container matColumnDef="Index2">
+                                <mat-header-cell *matHeaderCellDef> #</mat-header-cell>
+                                <mat-cell *matCellDef="let row;let i = index"> {{i+1}}</mat-cell>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="Name2">
+                                <mat-header-cell *matHeaderCellDef> Submitted by</mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.Name}}</mat-cell>
+                            </ng-container>
+
+                            <!-- Date Column -->
+                            <ng-container matColumnDef="Date2">
+                                <mat-header-cell *matHeaderCellDef> Submission</mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.Date}}</mat-cell>
+                            </ng-container>
+
+                            <!-- CheckCount Column -->
+                            <ng-container matColumnDef="CheckCount2">
+                                <mat-header-cell *matHeaderCellDef> Code Analysis</mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="action-link">
+                                    <a href="#" (click)="showList(element.CheckList); false;">
+                                        <mat-progress-bar id="checkBar"
+                                                          placement="top" ngbTooltip="Click to see code analysis"
+                                                          mode="determinate"
+                                                          value="{{element.CheckCount}}"></mat-progress-bar>
+                                    </a>
+                                </mat-cell>
+                            </ng-container>
+
+                            <!-- ExecTime Column -->
+                            <ng-container matColumnDef="ExecTime2">
+                                <mat-header-cell *matHeaderCellDef> Response Time</mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.ExecTime}}</mat-cell>
+                            </ng-container>
+
+                            <!-- Events Column -->
+                            <ng-container matColumnDef="History2">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Events</mat-header-cell>
+                                <mat-cell *matCellDef="let element" class="action-link">
+                                    <a href="#" (click)="showEvents(element.Id); false;"
+                                       placement="top" ngbTooltip="Click to see the exercise events">
+                                        {{element.History}}
+                                    </a>
+                                </mat-cell>
+                            </ng-container>
+
+                            <!-- Status Column -->
+                            <ng-container matColumnDef="Status2">
+                                <mat-header-cell *matHeaderCellDef> Status</mat-header-cell>
+                                <mat-cell *matCellDef="let row"> {{row.Status}}</mat-cell>
+                            </ng-container>
+
+                            <!-- Action Column -->
+                            <ng-container matColumnDef="Action2">
+                                <mat-header-cell *matHeaderCellDef> Action</mat-header-cell>
+                                <mat-cell *matCellDef="let element;let i = index" class="action-link">
+                                    <div style="word-wrap: break-word;">
+                                        <button mat-icon-button
+                                                *ngIf="userSession.Module==='Admin' || module==='Assistant' || module==='Lecturer'"
+                                                (click)="deleteAnswer(element.Id, element.Name, r, i); false;"
+                                                placement="top" ngbTooltip="Delete exercise answer">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                        <button mat-icon-button
+                                                (click)="editAnswer(element); false;"
+                                                placement="top" ngbTooltip="Show exercise answer">
+                                            <mat-icon>code</mat-icon>
+                                        </button>
+                                    </div>
+                                </mat-cell>
+                            </ng-container>
+
+                            <mat-header-row class="header2" *matHeaderRowDef="displayedColumns2"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns: displayedColumns2;">
+                            </mat-row>
+                        </table>
+
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+                class="element-row"
+                [class.example-expanded-row]="expandedElement === element"
+                (click)="expandedElement = element">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+<div class="card m-3">
+  <h6 class="card-header">
+    <div style="float: left">
+      <span>Answer: {{exercise.Title}} {{answerName?'('+answerName+')':''}}</span>
+      <br />
+      <span *ngIf="(exIsExpired >= 0)"
+            class="time" style="font-size: 12px;">Time to finish: {{countDown}}
+            </span>
+    </div>
+    <div style="float: right">
+      <button class="btn-sm btn-success" (click)="setRoute('view-answer')" style="margin-left: 20px;">Answers</button>
+    </div>
+  </h6>
+
+  <div *ngIf="load===0">
+    <app-mat-progress-bar></app-mat-progress-bar>
+  </div>
+
+  <div class="col-md-12 group-container">
+
+    <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <br />
+      <ul ngbNav #nav="ngbNav" class="nav-tabs" [(activeId)]="navActive" [destroyOnHide]="false">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>Content</a>
+          <ng-template ngbNavContent>
+            <div class="card m-12">
+              <h6 class="card-header">Exercise description</h6>
+              <div class="card-body">
+                <div [innerHTML]="exercise.Content"></div>
+              </div>
+            </div>
+
+          </ng-template>
+        </li>
+
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>Coding</a>
+          <ng-template ngbNavContent>
+
+            <div class="form-group code">
+              <app-code></app-code>
+            </div>
+
+          </ng-template>
+        </li>
+
+        <li [ngbNavItem]="3">
+          <a ngbNavLink>Diff</a>
+          <ng-template ngbNavContent>
+
+            <div class="form-group">
+              <div class="diff">
+                <div class="diffAdmin">Admin Result</div>
+                <div class="diffUser">Your Result:
+                  <button (click)="false" *ngIf="diff" [ngClass]="(diff=='EQUAL')?'btn-sm btn btn-success':'btn-sm btn btn-danger'">
+                    {{diff}}
+                  </button>
+                </div>
+              </div>
+
+              <ngx-monaco-diff-editor
+                      [options]="resultOptions"
+                      [originalModel]="originalModel"
+                      [modifiedModel]="modifiedModel">
+
+              </ngx-monaco-diff-editor>
+            </div>
+
+            <div class="form-group">
+              <label for="Comment">Comment:</label>
+              <textarea class="text" type="text" formControlName="Comment" name="Comment" id="Comment"></textarea>
+            </div>
+
+          </ng-template>
+        </li>
+
+      </ul>
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+      <div class="form-group">
+        <br /><button *ngIf="!Score && exIsExpired > 0 && exercise.MaxSubmissions > TotalEx"
+                      class="btn-sm btn-success">Submit</button>
+      </div>
+
+    </form>
+  </div>
+</div>

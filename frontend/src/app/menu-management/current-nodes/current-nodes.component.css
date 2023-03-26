@@ -1,0 +1,63 @@
+.user-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.help {
+    font-size: 12px;
+}
+
+.resources {
+    font-size: 10px;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+}
+
+.mat-list-base .mat-list-item {
+    color: #000;
+}
+
+.mat-list-base {
+    padding-top: 0px;
+}
+
+::ng-deep .mat-list-base .mat-list-item .mat-list-text, .mat-list-base .mat-list-option .mat-list-text {
+    float: left;
+    width: 80%;
+    padding: 4px;
+}
+::ng-deep .mat-list-base .mat-list-item .mat-list-icon, .mat-list-base .mat-list-option .mat-list-icon {
+    float: left;
+}
+
+::ng-deep .mat-list-base .mat-list-item.mat-multi-line .mat-list-item-content, .mat-list-base .mat-list-option.mat-multi-line .mat-list-item-content {
+    padding-top: 0px !important;
+}
+
+::ng-deep .mat-list-base .mat-list-item .mat-list-item-content, .mat-list-base .mat-list-option .mat-list-item-content {
+    display: block !important;
+}
+
+::ng-deep .nodes {
+    margin-left: 30px !important;
+    font-size: 12px !important;
+    height: 20px !important;
+}
+
+::ng-deep .listNodes {
+    margin-left:30px !important;
+}
+
+.nodesSelection {
+    text-align: left;
+    font-size: 14px;
+}
+
+.description {
+    font-size: 12px;
+    display: block;
+    white-space: pre-line;
+}

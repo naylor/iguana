@@ -1,0 +1,78 @@
+
+<div *ngIf="load===0 && exerciseId">
+  <app-mat-progress-bar></app-mat-progress-bar>
+</div>
+
+<div *ngIf="!exerciseId">Save the exercise first to enter a group.</div>
+
+<div *ngIf="exerciseId" class="m-12">
+
+  <form *ngIf="exerciseId" enctype="multipart/form-data" (ngSubmit)="uploadFile()">
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        <input #inputFile class="btn-sm btn-primary" type='file' name="media" #selectfile >
+      </div>
+      <div class="form-group col-md-3">
+        <button class="btn-sm btn-primary" mat-raised-button type="button" (click)="uploadFile()">Upload</button>
+      </div>
+      <div class="form-group col-md-3">
+        <progress [value]=progress.loaded  [max]=progress.total></progress>
+      </div>
+    </div>
+
+  </form>
+
+  <div *ngIf="(files?.length <= 0 && load===1)">
+    No records found.
+  </div>
+
+  <div class="example-container mat-elevation-z8 ">
+
+    <mat-table [dataSource]="dataSource" class="table table-striped" matSort>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="Id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.Id}} </mat-cell>
+      </ng-container>
+
+      <!-- Title Column -->
+      <ng-container matColumnDef="Name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.FileName}} </mat-cell>
+      </ng-container>
+
+      <!-- Size Column -->
+      <ng-container matColumnDef="Size">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Size </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{_util.formatBytes(row.Size)}} </mat-cell>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="Action">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="action-link">
+          <div>
+            <button mat-icon-button
+                    (click)="delete(element); false;">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <div>
+            <button placement="top" ngbTooltip="Click to download"
+                    mat-icon-button
+                    (click)="download(element); false;">
+              <mat-icon>save_alt</mat-icon>
+            </button>
+          </div>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+    Files are inserted or deleted after choice. You don't need to click the Update button.
+
+  </div>
+
+</div>

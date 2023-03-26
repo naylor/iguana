@@ -1,0 +1,84 @@
+<div class="card m-3">
+  <h6 class="card-header">
+    <div style="float: left">
+      <span>{{fe.Id.value ? "Edit":"Add"}} User</span>
+    </div>
+    <div style="float: right" *ngIf="userSession.Module==='Admin'">
+      <button class="btn-sm btn-success" (click)="setRoute('view-user-classroom')" style="margin-left: 20px;">Users</button>
+    </div>
+  </h6>
+
+  <div class="col-md-6 user-container">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+      </div>
+
+      <hr />
+      <div class="form-group">
+        <input type="text" formControlName="Name" placeholder="Name" name="Name" class="form-control" id="Name">
+        <div *ngIf="submitted && fe.Name.errors" class="error response">
+          <div *ngIf="fe.Name.errors.required">Field is required</div>
+          <div *ngIf="fe.Name.errors.minlength">Name must be at least 4 characters</div>
+          <div *ngIf="fe.Name.errors.maxlength">Name must be a maximum of 60 characters</div>
+        </div>
+      </div>
+
+      <div class="error" *ngIf="fe.Id.value===1">Attention, the Admin password and email must be changed in the Settings module.
+        The change here is not definitive.</div>
+
+      <div class="form-group">
+        <input type="password" formControlName="Password" placeholder="Password" name="Password" class="form-control" id="Password">
+        <div *ngIf="submitted && fe.Password.errors" class="error response">
+          <div *ngIf="fe.Password.errors.required">Field is required</div>
+          <div *ngIf="fe.Password.errors.minlength">Password must be at least 4 characters</div>
+          <div *ngIf="fe.Password.errors.maxlength">Password must be a maximum of 50 characters</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input type="password" formControlName="CPassword" placeholder="Confirm Password" name="CPassword" class="form-control" id="CPassword">
+        <div *ngIf="submitted && fe.CPassword.errors" class="error response">
+          <div *ngIf="fe.CPassword.errors.required">Field is required</div>
+          <div *ngIf="fe.CPassword.errors.minlength">Password must be at least 4 characters</div>
+          <div *ngIf="fe.CPassword.errors.maxlength">Password must be a maximum of 50 characters</div>
+          <div *ngIf="fe.CPassword.errors.mismatch">The passwords are different</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input type="text" formControlName="Email" placeholder="Email" name="Email" class="form-control" id="Email">
+        <div *ngIf="submitted && fe.Email.errors" class="error response">
+          <div *ngIf="fe.Email.errors.required">Field is required</div>
+          <div *ngIf="fe.Email.errors.maxlength">Email must be a maximum of 100 characters</div>
+          <div *ngIf="fe.Email.errors.email">Please enter a valid email</div>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="userSession.Module==='Admin'">
+        <label for="Module">Module:</label>
+        <select formControlName="Module" placeholder="Module" name="Module" class="form-control" id="Module">
+          <option value="Lecturer">Lecturer</option>
+          <option value="Student">Student</option>
+          <option value="Assistant">Assistant</option>
+        </select>
+        <div *ngIf="submitted && fe.Module.errors" class="error response">
+          <div *ngIf="fe.Module.errors.required">Field is required</div>
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="fe.Id.value">
+        <label for="ForceChangePass">Force password change at next login?</label>
+        <select formControlName="ForceChangePass" placeholder="ForceChangePass"
+                name="ForceChangePass" class="form-control" id="ForceChangePass">
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <button [disabled]="disabled" class="btn-sm btn-success">{{fe.Id.value ? "Update":"Insert"}}</button>
+      </div>
+    </form>
+
+  </div>
+</div>

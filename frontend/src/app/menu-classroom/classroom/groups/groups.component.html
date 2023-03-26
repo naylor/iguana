@@ -1,0 +1,74 @@
+<div class="card m-3">
+  <h6 class="card-header">
+    <div style="float: left">
+      <span>Groups</span>
+    </div>
+    <div style="float: right">
+      <button class="btn-sm btn-primary" style="width:100px" (click)="addGroup()">Add</button>
+    </div>
+  </h6>
+
+  <div *ngIf="load===0">
+    <app-mat-progress-bar></app-mat-progress-bar>
+  </div>
+
+  <div *ngIf="(groups?.length <= 0 && load===1)">
+    No records found.
+  </div>
+
+  <div class="filter">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($any($event.target).value)" placeholder="Filter: ">
+    </mat-form-field>
+  </div>
+
+  <div class="example-container mat-elevation-z8 ">
+
+    <mat-table [dataSource]="dataSource" matSort>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="Id">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> ID </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.Id}} </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="Name">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.Name}} </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="KeyAccess">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Self-registration Key </mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.KeyAccess}} </mat-cell>
+      </ng-container>
+
+      <!-- Action Column -->
+      <ng-container matColumnDef="Action">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="action-link">
+          <button mat-icon-button (click)="addMembers(element)" style="margin-left: 20px;"
+                  ngbPopover="Click to add or delete users"
+                  triggers="mouseenter:mouseleave"
+                  popoverTitle="Members">
+            <mat-icon>groups</mat-icon>
+            ({{element.mCount}})
+          </button>
+          <button mat-icon-button (click)="deleteGroup(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button (click)="editGroup(element)" style="margin-left: 20px;">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+
+    <mat-paginator [pageSizeOptions]="[25, 50, 100]"></mat-paginator>
+  </div>
+</div>

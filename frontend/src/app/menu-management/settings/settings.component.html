@@ -1,0 +1,406 @@
+<div class="card m-3">
+    <h6 class="card-header">
+        <span>Settings</span>
+        <br/>
+        <span class="help">If the field is left empty, the system will attempt to automatically detect the settings.</span>
+    </h6>
+    <div class="col-md-12 user-container">
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+            <ul ngbNav #nav="ngbNav" class="nav-tabs" [destroyOnHide]="false">
+                <li [ngbNavItem]="1">
+                    <a ngbNavLink>Network</a>
+                    <ng-template ngbNavContent>
+
+                        <div class="form-group">
+                            <label for="PublicInterface">Public Host Interface:</label>
+                            <span class="description" for="PublicInterface">Defines which network interface backend
+          and frontend will use to listen to network services.</span>
+                            <input type="text" formControlName="PublicInterface"
+                                   placeholder="Default: empty | Example: eth0"
+                                   name="PublicInterface" class="form-control" id="PublicInterface">
+                            <div *ngIf="submitted && fe.PublicInterface.errors" class="error response">
+                                <div *ngIf="fe.PublicInterface.errors.minlength">Public Interface field must have a minimum of 4 characters</div>
+                                <div *ngIf="fe.PublicInterface.errors.maxlength">Public Interface must be a maximum of 15 characters</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="BackendPort">Backend Service Port:</label>
+                            <span class="description">Sets the port value to list the services between the backends in the network.</span>
+                            <input type="number" formControlName="BackendPort" placeholder="Default: 10001"
+                                   name="BackendPort" class="form-control" id="BackendPort">
+                            <div *ngIf="submitted && fe.BackendPort.errors" class="error response">
+                                <div *ngIf="fe.BackendPort.errors.min">Backend Port field must have a minimum value of 1500</div>
+                                <div *ngIf="fe.BackendPort.errors.max">Backend Port must be a maximum of value 65534</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="FrontendPort">Frontend Service Port:</label>
+                            <span class="description">Sets the port value to list the services for the frontends.</span>
+                            <input type="number" formControlName="FrontendPort" placeholder="Default: 8000"
+                                   name="FrontendPort" class="form-control" id="FrontendPort">
+                            <div *ngIf="submitted && fe.FrontendPort.errors" class="error response">
+                                <div *ngIf="fe.FrontendPort.errors.min">Frontend Port field must have a minimum value of 1500</div>
+                                <div *ngIf="fe.FrontendPort.errors.max">Frontend Port must be a maximum of value 65534</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="WebSocketPort">Websocket Service Port:</label>
+                            <span class="description">Sets the frontend websocket communication port.</span>
+                            <input type="number" formControlName="WebSocketPort" placeholder="Default: 8001"
+                                   name="WebSocketPort" class="form-control" id="WebSocketPort">
+                            <div *ngIf="submitted && fe.WebSocketPort.errors" class="error response">
+                                <div *ngIf="fe.WebSocketPort.errors.min">WebSocket Port field must have a minimum value of 1500</div>
+                                <div *ngIf="fe.WebSocketPort.errors.max">WebSocket Port must be a maximum of value 65534</div>
+                            </div>
+                        </div>
+
+
+                    </ng-template>
+                </li>
+
+                <li [ngbNavItem]="2">
+                    <a ngbNavLink>Cluster</a>
+                    <ng-template ngbNavContent>
+
+                        <div class="form-group">
+                            <label for="ClusterName">Cluster:</label>
+                            <span class="description">The default cluster name.</span>
+                            <input type="text" formControlName="ClusterName" placeholder="Default: CLUSTER01"
+                                   name="ClusterName" class="form-control" id="ClusterName">
+                            <div *ngIf="submitted && fe.ClusterName.errors" class="error response">
+                                <div *ngIf="fe.ClusterName.errors.alphaNumeric">Spaces and special characters are not allowed. Alphanumeric characters only.</div>
+                                <div *ngIf="fe.ClusterName.errors.minlength">Cluster Name field must have a minimum of 4 characters</div>
+                                <div *ngIf="fe.ClusterName.errors.maxlength">Cluster Name must be a maximum of 20 characters</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ClusterPassword">Cluster Password:</label>
+                            <span class="description">Defines the cluster password for connection between nodes.
+          If the password is left empty, the nodes will connect automatically if their
+          operating modes are set to NODE.</span>
+                            <input type="text" formControlName="ClusterPassword" placeholder="Default: empty"
+                                   name="ClusterPassword" class="form-control" id="ClusterPassword">
+                            <div *ngIf="submitted && fe.ClusterPassword.errors" class="error response">
+                                <div *ngIf="fe.ClusterPassword.errors.minlength">Cluster Password field must have a minimum of 4 characters</div>
+                                <div *ngIf="fe.ClusterPassword.errors.maxlength">Cluster Password must be a maximum of 20 characters</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="NodeMode">Node Mode:</label>
+                            <span class="description">
+                                SINGLE: creates a node for each vCPU present on the host, simulating a cluster.
+                                <br />MULTI.: allocates all vCPUs to Master virtual node.
+                                <br />SHARED: makes all vCPUs available to nodes, regardless of quantity.
+                            </span>
+                            <select formControlName="NodeMode" name="NodeMode" class="form-control"
+                                    id="NodeMode">
+                                <option value="">Default: SHARED</option>
+                                <option value="SINGLE">SINGLE</option>
+                                <option value="MULTI">MULTI</option>
+                                <option value="SHARED">SHARED</option>
+                            </select>
+                            <div *ngIf="submitted && fe.NodeMode.errors" class="error response">
+                                <div *ngIf="fe.NodeMode.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="OperationMode">Operation Mode:</label>
+                            <span class="description">
+                                LOCAL: prepares the system to work on one host or virtual machine.
+                                <br />MASTER: defines the host or virtual machine as the master node of the cluster, listing the service available to other hosts on the network.
+                                <br />NODE: sets the host or virtual machine as node mode, enabling the search for a master host to connect.
+                            </span>
+                            <select formControlName="OperationMode" name="OperationMode" class="form-control"
+                                    id="OperationMode">
+                                <option value="">Default: LOCAL</option>
+                                <option value="LOCAL">LOCAL</option>
+                                <option value="NODE">NODE</option>
+                                <option value="MASTER">MASTER</option>
+                            </select>
+                            <div *ngIf="submitted && fe.OperationMode.errors" class="error response">
+                                <div *ngIf="fe.OperationMode.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="StartContainers">Number of Nodes:</label>
+                            <span class="description">The number of containers (virtual nodes) to be started on backend init.</span>
+                            <input type="number" formControlName="StartContainers" placeholder="Default: 0"
+                                   name="StartContainers" class="form-control" id="StartContainers">
+                            <div *ngIf="submitted && fe.StartContainers.errors" class="error response">
+                                <div *ngIf="fe.StartContainers.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="MaxContainers">Maximum Number of Nodes:</label>
+                            <span class="description">The maximum number of containers running as nodes.</span>
+                            <input type="number" formControlName="MaxContainers" placeholder="Default: 30"
+                                   name="MaxContainers" class="form-control" id="MaxContainers">
+                            <div *ngIf="submitted && fe.MaxContainers.errors" class="error response">
+                                <div *ngIf="fe.MaxContainers.errors.min">Max Containers field must have a minimum value of 1500</div>
+                                <div *ngIf="fe.MaxContainers.errors.max">Max Containers must be a maximum of value 65534</div>
+                            </div>
+                        </div>
+
+                    </ng-template>
+                </li>
+
+                <li [ngbNavItem]="3">
+                    <a ngbNavLink>Admin</a>
+                    <ng-template ngbNavContent>
+
+                        <div class="form-group">
+                            <label for="HostUser">Host User:</label>
+                            <span class="description">Sets the default user for the host and for accessing
+          the frontend Administrator roles.</span>
+                            <input type="text" formControlName="HostUser" placeholder="Default: user@user"
+                                   name="HostUser" class="form-control" id="HostUser">
+                            <div *ngIf="submitted && fe.HostUser.errors" class="error response">
+                                <div *ngIf="fe.HostUser.errors.minlength">Host User field must have a minimum of 4 characters</div>
+                                <div *ngIf="fe.HostUser.errors.maxlength">Host User must be a maximum of 20 characters</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="HostPassword">Host Password:</label>
+                            <span class="description">Sets the default user password.</span>
+                            <input type="text" formControlName="HostPassword" placeholder="Default: user"
+                                   name="HostPassword" class="form-control" id="HostPassword">
+                            <div *ngIf="submitted && fe.HostPassword.errors" class="error response">
+                                <div *ngIf="fe.HostPassword.errors.minlength">Host Password field must have a minimum of 4 characters</div>
+                                <div *ngIf="fe.HostPassword.errors.maxlength">Host Password must be a maximum of 20 characters</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="SelfRegistration">Self Registration:</label>
+                            <span class="description">Allows users to create their own logins on the server.</span>
+                            <select formControlName="SelfRegistration" placeholder="Default: On"
+                                    name="SelfRegistration" class="form-control" id="SelfRegistration">
+                                <option value="">Default: On</option>
+                                <option value="On">On</option>
+                                <option value="Off">Off</option>
+                            </select>
+                            <div *ngIf="submitted && fe.SelfRegistration.errors" class="error response">
+                                <div *ngIf="fe.SelfRegistration.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                    </ng-template>
+                </li>
+
+                <li [ngbNavItem]="4">
+                    <a ngbNavLink>Coding</a>
+                    <ng-template ngbNavContent>
+
+                        <div class="form-group">
+                            <label for="CodeExecTimeout">Code Execution Timeout:</label>
+                            <span class="description">Defines a timeout to code execution (in seconds).</span>
+                            <input type="number" formControlName="CodeExecTimeout" placeholder="Default: 20"
+                                   name="CodeExecTimeout" class="form-control" id="CodeExecTimeout">
+                            <div *ngIf="submitted && fe.CodeExecTimeout.errors" class="error response">
+                                <div *ngIf="fe.CodeExecTimeout.errors.min">Code Execution Timeout field must have a minimum value of 10</div>
+                                <div *ngIf="fe.CodeExecTimeout.errors.max">Code Execution Timeout must be a maximum of value 1000</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="CodeMaxFileSize">File Size Upload:</label>
+                            <span class="description">Sets the maximum file size to upload (in bytes).</span>
+                            <input type="number" formControlName="CodeMaxFileSize" placeholder="Default: 5242880"
+                                   name="CodeMaxFileSize" class="form-control" id="CodeMaxFileSize"
+                                   (click)="getInputMaxFileSize($event)"
+                                   (keyup)="getInputMaxFileSize($event)">{{CodeMaxFileSize}}
+                            <div *ngIf="submitted && fe.CodeMaxFileSize.errors" class="error response">
+                                <div *ngIf="fe.CodeMaxFileSize.errors.min">File Size Upload field must have a minimum value of 1</div>
+                                <div *ngIf="fe.CodeMaxFileSize.errors.max">File Size Upload must be a maximum of value 10000000000</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Queue">Queuing System:</label>
+                            <span class="description">If enabled, a queue system will prevent two codes from running at the same time.
+          If disabled, it will become optional for each run.</span>
+                            <select formControlName="Queue" placeholder="Default: Off" name="Queue" class="form-control"
+                                    id="Queue">
+                                <option value="">Default: Off</option>
+                                <option value="On">On</option>
+                                <option value="Off">Off</option>
+                            </select>
+                            <div *ngIf="submitted && fe.Queue.errors" class="error response">
+                                <div *ngIf="fe.Queue.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="MaxConcurrency">Maximum Queue Concurrency:</label>
+                            <span class="description">Defines the maximum number of users in the queue, competing for resources.</span>
+                            <input type="number" formControlName="MaxConcurrency" placeholder="Default: 30"
+                                   name="MaxConcurrency" class="form-control" id="MaxConcurrency">
+                            <div *ngIf="submitted && fe.MaxConcurrency.errors" class="error response">
+                                <div *ngIf="fe.MaxConcurrency.errors.min">Max Concurrency field must have a minimum value of 1</div>
+                                <div *ngIf="fe.MaxConcurrency.errors.max">Max Concurrency must be a maximum of value 10000000000</div>
+                            </div>
+                        </div>
+
+                    </ng-template>
+                </li>
+
+                <li [ngbNavItem]="5">
+                    <a ngbNavLink>Debug</a>
+                    <ng-template ngbNavContent>
+
+                        <div class="form-group">
+                            <label for="Debug">Debug:</label>
+                            <span class="description">Shows debug messages on the backend.</span>
+                            <select formControlName="Debug" placeholder="Default: Off" name="Debug" class="form-control"
+                                    id="Debug">
+                                <option value="">Default: Off</option>
+                                <option value="On">On</option>
+                                <option value="Off">Off</option>
+                            </select>
+                            <div *ngIf="submitted && fe.Debug.errors" class="error response">
+                                <div *ngIf="fe.Debug.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Error">Error:</label>
+                            <span class="description">Shows error messages on the backend.</span>
+                            <select formControlName="Error" placeholder="Default: Off" name="Error" class="form-control"
+                                    id="Error">
+                                <option value="">Default: Off</option>
+                                <option value="On">On</option>
+                                <option value="Off">Off</option>
+                            </select>
+                            <div *ngIf="submitted && fe.Error.errors" class="error response">
+                                <div *ngIf="fe.Error.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                    </ng-template>
+                </li>
+
+                <li [ngbNavItem]="6">
+                    <a ngbNavLink>SMTP Account</a>
+                    <ng-template ngbNavContent>
+
+                        <div class="form-group">
+                            <label for="SmtpServer">Smtp Server:</label>
+                            <span class="description">Server address responsible for sending the account
+          registration and password recovery emails.</span>
+                            <input type="text" formControlName="SmtpServer" placeholder="Default: empty"
+                                   name="SmtpServer" class="form-control" id="SmtpServer">
+                            <div *ngIf="submitted && fe.SmtpServer.errors" class="error response">
+                                <div *ngIf="fe.SmtpServer.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="SmtpPort">Smtp Port:</label>
+                            <span class="description">Mail server port.</span>
+                            <input type="number" formControlName="SmtpPort" placeholder="Default: empty"
+                                   name="SmtpPort" class="form-control" id="SmtpPort">
+                            <div *ngIf="submitted && fe.SmtpPort.errors" class="error response">
+                                <div *ngIf="fe.SmtpPort.errors.min">Smtp Port field must have a minimum value of 1</div>
+                                <div *ngIf="fe.SmtpPort.errors.max">Smtp Port must be a maximum of value 65534</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="SmtpUser">Smtp User:</label>
+                            <span class="description">Registered user for sending emails.</span>
+                            <input type="text" formControlName="SmtpUser" placeholder="Default: empty"
+                                   name="SmtpUser" class="form-control" id="SmtpUser">
+                            <div *ngIf="submitted && fe.SmtpUser.errors" class="error response">
+                                <div *ngIf="fe.SmtpUser.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="SmtpPassword">Smtp User Password:</label>
+                            <span class="description">User Password registered for sending e-mails.</span>
+                            <input type="text" formControlName="SmtpPassword" placeholder="Default: empty"
+                                   name="SmtpPassword" class="form-control" id="SmtpPassword">
+                            <div *ngIf="submitted && fe.SmtpPassword.errors" class="error response">
+                                <div *ngIf="fe.SmtpPassword.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                    </ng-template>
+                </li>
+
+                <li [ngbNavItem]="">
+                    <a ngbNavLink>Database Account</a>
+                    <ng-template ngbNavContent>
+
+                        <div class="form-group">
+                            <label for="DbHost">DB Server:</label>
+                            <span class="description">DB Server address.</span>
+                            <input type="text" formControlName="DbHost" placeholder="Default: localhost"
+                                   name="DbHost" class="form-control" id="DbHost">
+                            <div *ngIf="submitted && fe.DbHost.errors" class="error response">
+                                <div *ngIf="fe.DbHost.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="DbPort">DB Port:</label>
+                            <span class="description">DB server port.</span>
+                            <input type="number" formControlName="DbPort" placeholder="Default: 3306"
+                                   name="SmtpPort" class="form-control" id="DbPort">
+                            <div *ngIf="submitted && fe.DbPort.errors" class="error response">
+                                <div *ngIf="fe.DbPort.errors.min">DB Port field must have a minimum value of 1</div>
+                                <div *ngIf="fe.DbPort.errors.max">DB Port must be a maximum of value 65534</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="DbUser">DB User:</label>
+                            <span class="description">DB user to connection.</span>
+                            <input type="text" formControlName="DbUser" placeholder="Default: root"
+                                   name="DbUser" class="form-control" id="DbUser">
+                            <div *ngIf="submitted && fe.DbUser.errors" class="error response">
+                                <div *ngIf="fe.DbUser.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="DbPassword">DB Password:</label>
+                            <span class="description">DB password to connection.</span>
+                            <input type="text" formControlName="DbPassword" placeholder="Default: 1gu@nACS"
+                                   name="DbPassword" class="form-control" id="DbPassword">
+                            <div *ngIf="submitted && fe.DbPassword.errors" class="error response">
+                                <div *ngIf="fe.DbPassword.errors.required">Field is required</div>
+                            </div>
+                        </div>
+
+                    </ng-template>
+                </li>
+
+            </ul>
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+            <div class="form-group">
+                <button class="btn-sm btn-success">Update</button>
+            </div>
+        </form>
+
+        <div class="response text-center" *ngIf="response.Name">
+            <div *ngIf="response.Name==='ok' || response.Name==='info'" class="{{response.Name}}">
+                {{response.Status}}
+                <app-mat-progress-bar></app-mat-progress-bar>
+            </div>
+            <div *ngIf="response.Name==='error'" class="{{response.Name}}">{{response.Status}}</div>
+        </div>
+    </div>
+</div>

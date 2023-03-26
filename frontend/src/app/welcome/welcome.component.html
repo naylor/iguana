@@ -1,0 +1,36 @@
+<div class="card m-3">
+  <div class="welcome">
+
+    <div class="form-row">
+      <div class="form-group col">
+        <span>
+          Hello!
+          <br />
+          The Iguana Cluster System allows the execution of parallelized codes in OpenMP, MPI, and CUDA.
+          <br />
+          <br />
+          <span *ngIf="hostInfo.SelfRegistration==='On'">
+            <a href="#" (click)="setRoute(); false;">Register a user</a> and execute your codes in parallel.
+          </span>
+          <br />
+          <br />
+          Simple, quick, and easy.
+          <hr />
+          Author: Naylor Garcia Bachiega
+          <br />
+          Developed for doctoral work at the University of São Paulo - ICMC/USP
+          <br /><br />
+          Advisor: Paulo Sérgio Lopes de Souza
+        </span>
+      </div>
+      <div *ngIf="!userSession.Owner" class="flex-column">
+
+        <div class="card-body">
+          <app-host-login></app-host-login>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>

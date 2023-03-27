@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 192.168.0.198 --proxy-config proxy.config.js",
-    "build": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build",
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider; node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

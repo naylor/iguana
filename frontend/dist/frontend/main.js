@@ -2412,7 +2412,7 @@ var CodeComponent = /** @class */ (function () {
         this.codeTemp.Command = this.code.Command;
     };
     CodeComponent.prototype.setTheme = function (val) {
-        this.editor.setTheme(val);
+        this.editor._themeService.setTheme(val);
     };
     CodeComponent.prototype.onKeydownEvent = function (editor) {
         //To autodetect de compiler language
@@ -9458,7 +9458,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_2__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /media/naylor/DADOS/Iguana/ICS/frontend/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /media/naylor/DADOS/Projeto/ICS/frontend/src/main.ts */"./src/main.ts");
 
 
 /***/ }),

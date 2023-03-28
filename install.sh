@@ -66,7 +66,7 @@ func_clone() {
   else
     echo "start git clone!"
     cd $SRC
-    git clone https://github.com/$NAME/$GIT
+    git clone https://github.com/naylor/iguana
   fi
 }
 

@@ -1,11 +1,11 @@
-FROM debian:8-slim
+FROM debian:11-slim
 
 RUN apt-get update
-RUN apt-get install -y --force-yes openssh-client
-RUN apt-get install -y --force-yes openssh-server
-RUN apt-get install -y --force-yes openmpi-bin
-RUN apt-get install -y --force-yes mpi-default-dev
-RUN apt-get install -y --force-yes g++
+RUN apt-get install -y --allow-change-held-packages openssh-client
+RUN apt-get install -y --allow-change-held-packages openssh-server
+RUN apt-get install -y --allow-change-held-packages openmpi-bin
+RUN apt-get install -y --allow-change-held-packages mpi-default-dev
+RUN apt-get install -y --allow-change-held-packages g++
 
 RUN addgroup --system appuser 
 RUN adduser --system --group appuser --shell /bin/bash
@@ -34,12 +34,12 @@ USER root
 RUN chmod 600 /home/appuser/.ssh/authorized_keys
 RUN chown appuser /home/appuser/.ssh/*
 
-RUN apt-get install -y --force-yes make
+RUN apt-get install -y --allow-change-held-packages make
 
 COPY ./ssh_keys/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key
 COPY ./ssh_keys/ssh_host_ecdsa_key.pub /etc/ssh/ssh_host_rsa_key.pub
 RUN chmod 600 /etc/ssh/ssh_host_rsa_key
 
-RUN apt-get install -y --force-yes sudo
+RUN apt-get install -y --allow-change-held-packages sudo
 
 CMD service ssh start && tail -f /dev/null

@@ -5,5 +5,3 @@ ExecStart=-/sbin/agetty --autologin user --login-program /usr/local/src/ICS/welc
 ##################################
 #  Welcome Iguana Cluster System #
 ##################################
-
-
